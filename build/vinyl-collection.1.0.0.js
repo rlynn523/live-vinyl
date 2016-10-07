@@ -62,7 +62,7 @@
 	
 	var _store2 = _interopRequireDefault(_store);
 	
-	var _routes = __webpack_require__(263);
+	var _routes = __webpack_require__(268);
 	
 	var _routes2 = _interopRequireDefault(_routes);
 	
@@ -28577,7 +28577,13 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var store = (0, _redux.createStore)(_index2.default, (0, _redux.applyMiddleware)(_reduxThunk2.default));
+	var middleware = [_reduxThunk2.default];
+	
+	var enhancers = (0, _redux.compose)(_redux.applyMiddleware.apply(undefined, middleware), window.devToolsExtension ? window.devToolsExtension() : function (f) {
+	    return f;
+	});
+	
+	var store = (0, _redux.createStore)(_index2.default, {}, enhancers);
 	
 	module.exports = store;
 
@@ -28625,15 +28631,25 @@
 	
 	var _music2 = _interopRequireDefault(_music);
 	
-	var _artist = __webpack_require__(262);
+	var _artist = __webpack_require__(264);
 	
 	var _artist2 = _interopRequireDefault(_artist);
+	
+	var _tour = __webpack_require__(265);
+	
+	var _tour2 = _interopRequireDefault(_tour);
+	
+	var _createUser = __webpack_require__(266);
+	
+	var _createUser2 = _interopRequireDefault(_createUser);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = (0, _redux.combineReducers)({
 	    MusicReducer: _music2.default,
-	    ArtistReducer: _artist2.default
+	    ArtistReducer: _artist2.default,
+	    TourReducer: _tour2.default,
+	    CreateUserReducer: _createUser2.default
 	});
 
 /***/ },
@@ -28651,7 +28667,7 @@
 	
 	var _artist2 = _interopRequireDefault(_artist);
 	
-	var _initialstate = __webpack_require__(261);
+	var _initialstate = __webpack_require__(263);
 	
 	var _initialstate2 = _interopRequireDefault(_initialstate);
 	
@@ -28674,9 +28690,15 @@
 
 /***/ },
 /* 260 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
+	
+	var _isomorphicFetch = __webpack_require__(261);
+	
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var FETCH_ARTIST_ALBUMS = 'FETCH_ARTIST_ALBUMS';
 	var fetchArtistAlbums = function fetchArtistAlbums(vinyl) {
@@ -28688,17 +28710,19 @@
 	var fetchAlbums = function fetchAlbums(userSearch, vinyl) {
 	    return function (dispatch) {
 	        var url = 'https://api.discogs.com/database/search?q=' + userSearch + '&format=Vinyl,album,LP&key=yWkjlILruJQTksamjYun&secret=THKNSeHdZeMCnPmMLkFfEdHJUTGDenPH';
-	        $.ajax({
-	            url: url,
-	            type: 'get',
-	            dataType: 'jsonp',
-	            contentType: 'application/json'
-	        }).done(function (data) {
+	        return (0, _isomorphicFetch2.default)(url).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response.json();
+	        }).then(function (data) {
 	            if (data) {
 	                var _vinyl = data;
 	                dispatch(fetchArtistAlbums(_vinyl));
 	            }
-	        }).error(function (error) {
+	        }).catch(function (error) {
 	            return dispatch(console.log(error));
 	        });
 	    };
@@ -28713,49 +28737,608 @@
 	var fetchMusic = function fetchMusic(userSearch, music) {
 	    return function (dispatch) {
 	        var url = 'https://api.spotify.com/v1/search?q=' + userSearch + '&type=artist';
-	        $.ajax({
-	            url: url,
-	            type: 'get'
-	        }).done(function (data) {
+	        return (0, _isomorphicFetch2.default)(url).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response.json();
+	        }).then(function (data) {
 	            if (data) {
 	                var artistId = data.artists.items[0].id;
-	                $.ajax({
-	                    url: 'https://api.spotify.com/v1/artists/' + artistId + '/albums?album_type=album',
-	                    type: 'get'
-	                }).done(function (data) {
+	                fetchRelated(artistId);
+	                url = 'https://api.spotify.com/v1/artists/' + artistId + '/albums?album_type=album';
+	                return (0, _isomorphicFetch2.default)(url).then(function (response) {
+	                    if (response.status < 200 || response.status >= 300) {
+	                        var error = new Error(response.statusText);
+	                        error.response = response;
+	                        throw error;
+	                    }
+	                    return response.json();
+	                }).then(function (data) {
 	                    if (data) {
-	                        console.log(data.items);
 	                        var _music = data;
 	                        dispatch(fetchArtistMusic(_music));
 	                    }
 	                });
+	            }
+	        }).catch(function (error) {
+	            return dispatch(console.log(error));
+	        });
+	    };
+	};
+	
+	var FETCH_TOUR_DATES = 'FETCH_TOUR_DATES';
+	var fetchTourDates = function fetchTourDates(tour) {
+	    return {
+	        type: FETCH_TOUR_DATES,
+	        tour: tour
+	    };
+	};
+	var fetchTour = function fetchTour(userSearch, tour) {
+	    return function (dispatch) {
+	        var url = 'http://api.bandsintown.com/artists/' + userSearch + '/events.json?api_version=2.0&app_id=VINYL_COLLECTION';
+	        return (0, _isomorphicFetch2.default)(url).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response.json();
+	        }).then(function (data) {
+	            console.log('DATA', data);
+	            if (data) {
+	                var _tour = data;
+	                dispatch(fetchTourDates(_tour));
+	            }
+	        }).catch(function (error) {
+	            return dispatch(console.log(error));
+	        });
+	    };
+	};
+	
+	var FETCH_RELATED_ARTISTS = 'FETCH_RELATED_ARTISTS';
+	var fetchRelatedArtists = function fetchRelatedArtists(related) {
+	    return {
+	        type: FETCH_RELATED_ARTISTS,
+	        related: related
+	    };
+	};
+	var fetchRelated = function fetchRelated(artistId, related) {
+	    return function (dispatch) {
+	        var url = 'https://api.spotify.com/v1/artists/' + artistId + '/related-artists';
+	        $.ajax({
+	            url: url,
+	            type: 'get',
+	            dataType: 'jsonp',
+	            contentType: 'application/json'
+	        }).done(function (data) {
+	            if (data) {
+	                console.log(data);
+	                dispatch(fetchRelatedArtists(related));
 	            }
 	        }).error(function (error) {
 	            return dispatch(console.log(error));
 	        });
 	    };
 	};
+	
+	var SAVE_TOUR_DATE = 'SAVE_TOUR_DATE';
+	var saveTourDate = function saveTourDate(tour) {
+	    return {
+	        type: SAVE_TOUR_DATE,
+	        tour: tour
+	    };
+	};
+	
+	var saveTour = function saveTour(tour) {
+	    return function (dispatch) {
+	        console.log('TOUR', tour);
+	        var url = 'http://localhost:8080/tours';
+	        return (0, _isomorphicFetch2.default)(url, { headers: {
+	                'Accept': 'application/json',
+	                'Content-Type': 'application/json'
+	            },
+	            method: 'post' }).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response.json();
+	        }).then(function (data) {
+	            console.log('SAVE TOUR', data);
+	            var tour = data;
+	            if (data) {
+	                dispatch(saveTourDate(tour));
+	            }
+	        }).error(function (error) {
+	            return dispatch(console.log(error));
+	        });
+	    };
+	};
+	
+	exports.SAVE_TOUR_DATE = SAVE_TOUR_DATE;
+	exports.saveTour = saveTour;
 	exports.FETCH_ARTIST_MUSIC = FETCH_ARTIST_MUSIC;
 	exports.fetchMusic = fetchMusic;
 	exports.FETCH_ARTIST_ALBUMS = FETCH_ARTIST_ALBUMS;
 	exports.fetchAlbums = fetchAlbums;
+	exports.FETCH_TOUR_DATES = FETCH_TOUR_DATES;
+	exports.fetchTour = fetchTour;
+	exports.FETCH_RELATED_ARTISTS = FETCH_RELATED_ARTISTS;
+	exports.fetchRelated = fetchRelated;
 
 /***/ },
 /* 261 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	     value: true
-	});
-	exports.default = {
-	     vinyl: null,
-	     music: null
-	};
+	// the whatwg-fetch polyfill installs the fetch() function
+	// on the global object (window or self)
+	//
+	// Return that as the export for use in Webpack, Browserify etc.
+	__webpack_require__(262);
+	module.exports = self.fetch.bind(self);
+
 
 /***/ },
 /* 262 */
+/***/ function(module, exports) {
+
+	(function(self) {
+	  'use strict';
+	
+	  if (self.fetch) {
+	    return
+	  }
+	
+	  var support = {
+	    searchParams: 'URLSearchParams' in self,
+	    iterable: 'Symbol' in self && 'iterator' in Symbol,
+	    blob: 'FileReader' in self && 'Blob' in self && (function() {
+	      try {
+	        new Blob()
+	        return true
+	      } catch(e) {
+	        return false
+	      }
+	    })(),
+	    formData: 'FormData' in self,
+	    arrayBuffer: 'ArrayBuffer' in self
+	  }
+	
+	  function normalizeName(name) {
+	    if (typeof name !== 'string') {
+	      name = String(name)
+	    }
+	    if (/[^a-z0-9\-#$%&'*+.\^_`|~]/i.test(name)) {
+	      throw new TypeError('Invalid character in header field name')
+	    }
+	    return name.toLowerCase()
+	  }
+	
+	  function normalizeValue(value) {
+	    if (typeof value !== 'string') {
+	      value = String(value)
+	    }
+	    return value
+	  }
+	
+	  // Build a destructive iterator for the value list
+	  function iteratorFor(items) {
+	    var iterator = {
+	      next: function() {
+	        var value = items.shift()
+	        return {done: value === undefined, value: value}
+	      }
+	    }
+	
+	    if (support.iterable) {
+	      iterator[Symbol.iterator] = function() {
+	        return iterator
+	      }
+	    }
+	
+	    return iterator
+	  }
+	
+	  function Headers(headers) {
+	    this.map = {}
+	
+	    if (headers instanceof Headers) {
+	      headers.forEach(function(value, name) {
+	        this.append(name, value)
+	      }, this)
+	
+	    } else if (headers) {
+	      Object.getOwnPropertyNames(headers).forEach(function(name) {
+	        this.append(name, headers[name])
+	      }, this)
+	    }
+	  }
+	
+	  Headers.prototype.append = function(name, value) {
+	    name = normalizeName(name)
+	    value = normalizeValue(value)
+	    var list = this.map[name]
+	    if (!list) {
+	      list = []
+	      this.map[name] = list
+	    }
+	    list.push(value)
+	  }
+	
+	  Headers.prototype['delete'] = function(name) {
+	    delete this.map[normalizeName(name)]
+	  }
+	
+	  Headers.prototype.get = function(name) {
+	    var values = this.map[normalizeName(name)]
+	    return values ? values[0] : null
+	  }
+	
+	  Headers.prototype.getAll = function(name) {
+	    return this.map[normalizeName(name)] || []
+	  }
+	
+	  Headers.prototype.has = function(name) {
+	    return this.map.hasOwnProperty(normalizeName(name))
+	  }
+	
+	  Headers.prototype.set = function(name, value) {
+	    this.map[normalizeName(name)] = [normalizeValue(value)]
+	  }
+	
+	  Headers.prototype.forEach = function(callback, thisArg) {
+	    Object.getOwnPropertyNames(this.map).forEach(function(name) {
+	      this.map[name].forEach(function(value) {
+	        callback.call(thisArg, value, name, this)
+	      }, this)
+	    }, this)
+	  }
+	
+	  Headers.prototype.keys = function() {
+	    var items = []
+	    this.forEach(function(value, name) { items.push(name) })
+	    return iteratorFor(items)
+	  }
+	
+	  Headers.prototype.values = function() {
+	    var items = []
+	    this.forEach(function(value) { items.push(value) })
+	    return iteratorFor(items)
+	  }
+	
+	  Headers.prototype.entries = function() {
+	    var items = []
+	    this.forEach(function(value, name) { items.push([name, value]) })
+	    return iteratorFor(items)
+	  }
+	
+	  if (support.iterable) {
+	    Headers.prototype[Symbol.iterator] = Headers.prototype.entries
+	  }
+	
+	  function consumed(body) {
+	    if (body.bodyUsed) {
+	      return Promise.reject(new TypeError('Already read'))
+	    }
+	    body.bodyUsed = true
+	  }
+	
+	  function fileReaderReady(reader) {
+	    return new Promise(function(resolve, reject) {
+	      reader.onload = function() {
+	        resolve(reader.result)
+	      }
+	      reader.onerror = function() {
+	        reject(reader.error)
+	      }
+	    })
+	  }
+	
+	  function readBlobAsArrayBuffer(blob) {
+	    var reader = new FileReader()
+	    reader.readAsArrayBuffer(blob)
+	    return fileReaderReady(reader)
+	  }
+	
+	  function readBlobAsText(blob) {
+	    var reader = new FileReader()
+	    reader.readAsText(blob)
+	    return fileReaderReady(reader)
+	  }
+	
+	  function Body() {
+	    this.bodyUsed = false
+	
+	    this._initBody = function(body) {
+	      this._bodyInit = body
+	      if (typeof body === 'string') {
+	        this._bodyText = body
+	      } else if (support.blob && Blob.prototype.isPrototypeOf(body)) {
+	        this._bodyBlob = body
+	      } else if (support.formData && FormData.prototype.isPrototypeOf(body)) {
+	        this._bodyFormData = body
+	      } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+	        this._bodyText = body.toString()
+	      } else if (!body) {
+	        this._bodyText = ''
+	      } else if (support.arrayBuffer && ArrayBuffer.prototype.isPrototypeOf(body)) {
+	        // Only support ArrayBuffers for POST method.
+	        // Receiving ArrayBuffers happens via Blobs, instead.
+	      } else {
+	        throw new Error('unsupported BodyInit type')
+	      }
+	
+	      if (!this.headers.get('content-type')) {
+	        if (typeof body === 'string') {
+	          this.headers.set('content-type', 'text/plain;charset=UTF-8')
+	        } else if (this._bodyBlob && this._bodyBlob.type) {
+	          this.headers.set('content-type', this._bodyBlob.type)
+	        } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+	          this.headers.set('content-type', 'application/x-www-form-urlencoded;charset=UTF-8')
+	        }
+	      }
+	    }
+	
+	    if (support.blob) {
+	      this.blob = function() {
+	        var rejected = consumed(this)
+	        if (rejected) {
+	          return rejected
+	        }
+	
+	        if (this._bodyBlob) {
+	          return Promise.resolve(this._bodyBlob)
+	        } else if (this._bodyFormData) {
+	          throw new Error('could not read FormData body as blob')
+	        } else {
+	          return Promise.resolve(new Blob([this._bodyText]))
+	        }
+	      }
+	
+	      this.arrayBuffer = function() {
+	        return this.blob().then(readBlobAsArrayBuffer)
+	      }
+	
+	      this.text = function() {
+	        var rejected = consumed(this)
+	        if (rejected) {
+	          return rejected
+	        }
+	
+	        if (this._bodyBlob) {
+	          return readBlobAsText(this._bodyBlob)
+	        } else if (this._bodyFormData) {
+	          throw new Error('could not read FormData body as text')
+	        } else {
+	          return Promise.resolve(this._bodyText)
+	        }
+	      }
+	    } else {
+	      this.text = function() {
+	        var rejected = consumed(this)
+	        return rejected ? rejected : Promise.resolve(this._bodyText)
+	      }
+	    }
+	
+	    if (support.formData) {
+	      this.formData = function() {
+	        return this.text().then(decode)
+	      }
+	    }
+	
+	    this.json = function() {
+	      return this.text().then(JSON.parse)
+	    }
+	
+	    return this
+	  }
+	
+	  // HTTP methods whose capitalization should be normalized
+	  var methods = ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT']
+	
+	  function normalizeMethod(method) {
+	    var upcased = method.toUpperCase()
+	    return (methods.indexOf(upcased) > -1) ? upcased : method
+	  }
+	
+	  function Request(input, options) {
+	    options = options || {}
+	    var body = options.body
+	    if (Request.prototype.isPrototypeOf(input)) {
+	      if (input.bodyUsed) {
+	        throw new TypeError('Already read')
+	      }
+	      this.url = input.url
+	      this.credentials = input.credentials
+	      if (!options.headers) {
+	        this.headers = new Headers(input.headers)
+	      }
+	      this.method = input.method
+	      this.mode = input.mode
+	      if (!body) {
+	        body = input._bodyInit
+	        input.bodyUsed = true
+	      }
+	    } else {
+	      this.url = input
+	    }
+	
+	    this.credentials = options.credentials || this.credentials || 'omit'
+	    if (options.headers || !this.headers) {
+	      this.headers = new Headers(options.headers)
+	    }
+	    this.method = normalizeMethod(options.method || this.method || 'GET')
+	    this.mode = options.mode || this.mode || null
+	    this.referrer = null
+	
+	    if ((this.method === 'GET' || this.method === 'HEAD') && body) {
+	      throw new TypeError('Body not allowed for GET or HEAD requests')
+	    }
+	    this._initBody(body)
+	  }
+	
+	  Request.prototype.clone = function() {
+	    return new Request(this)
+	  }
+	
+	  function decode(body) {
+	    var form = new FormData()
+	    body.trim().split('&').forEach(function(bytes) {
+	      if (bytes) {
+	        var split = bytes.split('=')
+	        var name = split.shift().replace(/\+/g, ' ')
+	        var value = split.join('=').replace(/\+/g, ' ')
+	        form.append(decodeURIComponent(name), decodeURIComponent(value))
+	      }
+	    })
+	    return form
+	  }
+	
+	  function headers(xhr) {
+	    var head = new Headers()
+	    var pairs = (xhr.getAllResponseHeaders() || '').trim().split('\n')
+	    pairs.forEach(function(header) {
+	      var split = header.trim().split(':')
+	      var key = split.shift().trim()
+	      var value = split.join(':').trim()
+	      head.append(key, value)
+	    })
+	    return head
+	  }
+	
+	  Body.call(Request.prototype)
+	
+	  function Response(bodyInit, options) {
+	    if (!options) {
+	      options = {}
+	    }
+	
+	    this.type = 'default'
+	    this.status = options.status
+	    this.ok = this.status >= 200 && this.status < 300
+	    this.statusText = options.statusText
+	    this.headers = options.headers instanceof Headers ? options.headers : new Headers(options.headers)
+	    this.url = options.url || ''
+	    this._initBody(bodyInit)
+	  }
+	
+	  Body.call(Response.prototype)
+	
+	  Response.prototype.clone = function() {
+	    return new Response(this._bodyInit, {
+	      status: this.status,
+	      statusText: this.statusText,
+	      headers: new Headers(this.headers),
+	      url: this.url
+	    })
+	  }
+	
+	  Response.error = function() {
+	    var response = new Response(null, {status: 0, statusText: ''})
+	    response.type = 'error'
+	    return response
+	  }
+	
+	  var redirectStatuses = [301, 302, 303, 307, 308]
+	
+	  Response.redirect = function(url, status) {
+	    if (redirectStatuses.indexOf(status) === -1) {
+	      throw new RangeError('Invalid status code')
+	    }
+	
+	    return new Response(null, {status: status, headers: {location: url}})
+	  }
+	
+	  self.Headers = Headers
+	  self.Request = Request
+	  self.Response = Response
+	
+	  self.fetch = function(input, init) {
+	    return new Promise(function(resolve, reject) {
+	      var request
+	      if (Request.prototype.isPrototypeOf(input) && !init) {
+	        request = input
+	      } else {
+	        request = new Request(input, init)
+	      }
+	
+	      var xhr = new XMLHttpRequest()
+	
+	      function responseURL() {
+	        if ('responseURL' in xhr) {
+	          return xhr.responseURL
+	        }
+	
+	        // Avoid security warnings on getResponseHeader when not allowed by CORS
+	        if (/^X-Request-URL:/m.test(xhr.getAllResponseHeaders())) {
+	          return xhr.getResponseHeader('X-Request-URL')
+	        }
+	
+	        return
+	      }
+	
+	      xhr.onload = function() {
+	        var options = {
+	          status: xhr.status,
+	          statusText: xhr.statusText,
+	          headers: headers(xhr),
+	          url: responseURL()
+	        }
+	        var body = 'response' in xhr ? xhr.response : xhr.responseText
+	        resolve(new Response(body, options))
+	      }
+	
+	      xhr.onerror = function() {
+	        reject(new TypeError('Network request failed'))
+	      }
+	
+	      xhr.ontimeout = function() {
+	        reject(new TypeError('Network request failed'))
+	      }
+	
+	      xhr.open(request.method, request.url, true)
+	
+	      if (request.credentials === 'include') {
+	        xhr.withCredentials = true
+	      }
+	
+	      if ('responseType' in xhr && support.blob) {
+	        xhr.responseType = 'blob'
+	      }
+	
+	      request.headers.forEach(function(value, name) {
+	        xhr.setRequestHeader(name, value)
+	      })
+	
+	      xhr.send(typeof request._bodyInit === 'undefined' ? null : request._bodyInit)
+	    })
+	  }
+	  self.fetch.polyfill = true
+	})(typeof self !== 'undefined' ? self : this);
+
+
+/***/ },
+/* 263 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = {
+	    username: '',
+	    vinyl: null,
+	    music: null,
+	    tour: null
+	};
+
+/***/ },
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28769,7 +29352,7 @@
 	
 	var _artist2 = _interopRequireDefault(_artist);
 	
-	var _initialstate = __webpack_require__(261);
+	var _initialstate = __webpack_require__(263);
 	
 	var _initialstate2 = _interopRequireDefault(_initialstate);
 	
@@ -28781,7 +29364,7 @@
 	
 	    switch (action.type) {
 	        case _artist2.default.FETCH_ARTIST_ALBUMS:
-	            var vinyl = action.vinyl.data.results;
+	            var vinyl = action.vinyl.results;
 	            var Artist = Object.assign({}, state, {
 	                vinyl: vinyl
 	            });
@@ -28791,7 +29374,128 @@
 	}
 
 /***/ },
-/* 263 */
+/* 265 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = TourReducer;
+	
+	var _artist = __webpack_require__(260);
+	
+	var _artist2 = _interopRequireDefault(_artist);
+	
+	var _initialstate = __webpack_require__(263);
+	
+	var _initialstate2 = _interopRequireDefault(_initialstate);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function TourReducer() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _initialstate2.default;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case _artist2.default.FETCH_TOUR_DATES:
+	            var tour = action;
+	            var Tour = Object.assign({}, state, {
+	                tour: tour
+	            });
+	            return Tour;
+	            break;
+	        case action.SAVE_TOUR_DATE:
+	            console.log(action);
+	            var savedTourDates = action;
+	            var userSavedTour = Object.assign({}, state, {
+	                savedTourDates: savedTourDates
+	            });
+	            return userSavedTour;
+	    }
+	    return state;
+	}
+
+/***/ },
+/* 266 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = CreateUserReducer;
+	
+	var _createUser = __webpack_require__(267);
+	
+	var _createUser2 = _interopRequireDefault(_createUser);
+	
+	var _initialstate = __webpack_require__(263);
+	
+	var _initialstate2 = _interopRequireDefault(_initialstate);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function CreateUserReducer() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _initialstate2.default;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case _createUser2.default.CREATE_NEW_USER:
+	            var username = action;
+	            var NewUser = Object.assign({}, state, {
+	                username: username
+	            });
+	            return NewUser;
+	    }
+	    return state;
+	}
+
+/***/ },
+/* 267 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var CREATE_NEW_USER = 'CREATE_NEW_USER';
+	
+	var createNewUser = function createNewUser(username, password) {
+	    return {
+	        type: CREATE_NEW_USER,
+	        username: username,
+	        password: password
+	    };
+	};
+	var createUser = function createUser(newUser, newUserPassword, username, password) {
+	    return function (dispatch) {
+	        var url = 'http://localhost:8080/users';
+	        $.ajax({
+	            url: url,
+	            type: 'post',
+	            dataType: 'json',
+	            data: JSON.stringify({
+	                username: newUser,
+	                password: newUserPassword
+	            }),
+	            contentType: 'application/json'
+	        }).done(function (data) {
+	            if (data) {
+	                console.log(password);
+	                dispatch(createNewUser(username, password));
+	            }
+	        }).error(function (error) {
+	            return dispatch(console.log(error));
+	        });
+	    };
+	};
+	
+	exports.CREATE_NEW_USER = CREATE_NEW_USER;
+	exports.createUser = createUser;
+
+/***/ },
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28802,17 +29506,33 @@
 	
 	var _reactRouter = __webpack_require__(195);
 	
-	var _search = __webpack_require__(264);
+	var _landing = __webpack_require__(269);
+	
+	var _landing2 = _interopRequireDefault(_landing);
+	
+	var _signup = __webpack_require__(270);
+	
+	var _signup2 = _interopRequireDefault(_signup);
+	
+	var _search = __webpack_require__(271);
 	
 	var _search2 = _interopRequireDefault(_search);
 	
-	var _vinyl = __webpack_require__(265);
+	var _vinyl = __webpack_require__(272);
 	
 	var _vinyl2 = _interopRequireDefault(_vinyl);
 	
-	var _music = __webpack_require__(268);
+	var _music = __webpack_require__(275);
 	
 	var _music2 = _interopRequireDefault(_music);
+	
+	var _tour = __webpack_require__(276);
+	
+	var _tour2 = _interopRequireDefault(_tour);
+	
+	var _signin = __webpack_require__(277);
+	
+	var _signin2 = _interopRequireDefault(_signin);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -28821,6 +29541,7 @@
 	        'div',
 	        null,
 	        _react2.default.createElement(_search2.default, null),
+	        _react2.default.createElement(_tour2.default, null),
 	        _react2.default.createElement(_music2.default, null),
 	        _react2.default.createElement(_vinyl2.default, null)
 	    );
@@ -28829,12 +29550,181 @@
 	var mainRouter = _react2.default.createElement(
 	    _reactRouter.Router,
 	    { history: _reactRouter.hashHistory },
-	    _react2.default.createElement(_reactRouter.Route, { path: '/', component: SearchContainer })
+	    _react2.default.createElement(_reactRouter.Route, { path: '/', component: _landing2.default }),
+	    _react2.default.createElement(_reactRouter.Route, { path: '/sign-in', component: _signin2.default }),
+	    _react2.default.createElement(_reactRouter.Route, { path: '/create-user', component: _signup2.default }),
+	    _react2.default.createElement(_reactRouter.Route, { path: '/search', component: SearchContainer })
 	);
+	
 	module.exports = mainRouter;
 
 /***/ },
-/* 264 */
+/* 269 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(195);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Landing = function (_Component) {
+	    _inherits(Landing, _Component);
+	
+	    function Landing() {
+	        _classCallCheck(this, Landing);
+	
+	        return _possibleConstructorReturn(this, (Landing.__proto__ || Object.getPrototypeOf(Landing)).apply(this, arguments));
+	    }
+	
+	    _createClass(Landing, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'h1',
+	                    null,
+	                    'Hello World'
+	                ),
+	                _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { to: '/sign-in' },
+	                    _react2.default.createElement(
+	                        'h2',
+	                        null,
+	                        'Sign In'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { to: '/search' },
+	                    _react2.default.createElement(
+	                        'h2',
+	                        null,
+	                        'Search'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { to: '/create-user' },
+	                    _react2.default.createElement(
+	                        'h2',
+	                        null,
+	                        'Create User'
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+	
+	    return Landing;
+	}(_react.Component);
+	
+	exports.default = Landing;
+
+/***/ },
+/* 270 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.CreateUser = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(172);
+	
+	var _createUser = __webpack_require__(267);
+	
+	var _createUser2 = _interopRequireDefault(_createUser);
+	
+	var _reactRouter = __webpack_require__(195);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var CreateUser = exports.CreateUser = function (_Component) {
+	    _inherits(CreateUser, _Component);
+	
+	    function CreateUser(props) {
+	        _classCallCheck(this, CreateUser);
+	
+	        var _this = _possibleConstructorReturn(this, (CreateUser.__proto__ || Object.getPrototypeOf(CreateUser)).call(this, props));
+	
+	        _this.onClick = _this.onClick.bind(_this);
+	        return _this;
+	    }
+	
+	    _createClass(CreateUser, [{
+	        key: 'onClick',
+	        value: function onClick() {
+	            this.props.dispatch(_createUser2.default.createUser(this.refs.newUser.value, this.refs.newUserPassword.value));
+	            _reactRouter.browserHistory.push('#/search');
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'form',
+	                    { id: 'createUser-form' },
+	                    _react2.default.createElement('input', { type: 'text', ref: 'newUser', placeholder: 'Username' }),
+	                    _react2.default.createElement('input', { type: 'password', ref: 'newUserPassword', placeholder: 'Password' }),
+	                    _react2.default.createElement(
+	                        'button',
+	                        { type: 'submit', onClick: this.onClick },
+	                        'Submit'
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+	
+	    return CreateUser;
+	}(_react.Component);
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+	    return {
+	        newUser: state.CreateUserReducer.username,
+	        newUserPassword: state.CreateUserReducer.password
+	    };
+	};
+	exports.default = (0, _reactRedux.connect)(mapStateToProps)(CreateUser);
+
+/***/ },
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28881,13 +29771,14 @@
 	        value: function onClick() {
 	            this.props.dispatch(_artist2.default.fetchMusic(this.refs.userSearch.value));
 	            this.props.dispatch(_artist2.default.fetchAlbums(this.refs.userSearch.value));
+	            this.props.dispatch(_artist2.default.fetchTour(this.refs.userSearch.value));
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
 	            return _react2.default.createElement(
 	                'div',
-	                null,
+	                { className: 'bandSearch' },
 	                _react2.default.createElement(
 	                    'form',
 	                    null,
@@ -28914,7 +29805,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(Search);
 
 /***/ },
-/* 265 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28932,7 +29823,7 @@
 	
 	var _reactRedux = __webpack_require__(172);
 	
-	var _reactLoader = __webpack_require__(266);
+	var _reactLoader = __webpack_require__(273);
 	
 	var _reactLoader2 = _interopRequireDefault(_reactLoader);
 	
@@ -28977,7 +29868,7 @@
 	                });
 	                return _react2.default.createElement(
 	                    'div',
-	                    null,
+	                    { className: 'vinylList' },
 	                    _react2.default.createElement(
 	                        'ul',
 	                        null,
@@ -28985,11 +29876,7 @@
 	                    )
 	                );
 	            } else {
-	                return _react2.default.createElement(
-	                    'p',
-	                    null,
-	                    'Start Your Search!'
-	                );
+	                return _react2.default.createElement('p', null);
 	            }
 	        }
 	    }]);
@@ -28999,20 +29886,19 @@
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
 	    return {
-	        vinylRecords: state.ArtistReducer.vinyl,
-	        artistAlbums: state.ArtistReducer.vinyl
+	        vinylRecords: state.ArtistReducer.vinyl
 	    };
 	};
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(Vinyl);
 
 /***/ },
-/* 266 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root, factory) {
 	
 	  if (true) {
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(1), __webpack_require__(34), __webpack_require__(267)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(1), __webpack_require__(34), __webpack_require__(274)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	  } else if (typeof module === 'object' && typeof module.exports === 'object') {
 	    module.exports = factory(require('react'), require('react-dom'), require('spin.js'));
 	  } else {
@@ -29133,7 +30019,7 @@
 
 
 /***/ },
-/* 267 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -29516,7 +30402,7 @@
 
 
 /***/ },
-/* 268 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29566,14 +30452,13 @@
 	                        _react2.default.createElement(
 	                            'a',
 	                            { href: artistAlbum.external_urls.spotify, target: '_blank' },
-	                            _react2.default.createElement('img', { src: artistAlbum.images[2].url })
-	                        ),
-	                        artistAlbum.name
+	                            _react2.default.createElement('img', { src: artistAlbum.images[1].url })
+	                        )
 	                    );
 	                });
 	                return _react2.default.createElement(
 	                    'div',
-	                    null,
+	                    { className: 'musicList' },
 	                    _react2.default.createElement(
 	                        'ul',
 	                        null,
@@ -29599,6 +30484,237 @@
 	    };
 	};
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(Music);
+
+/***/ },
+/* 276 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.Tour = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(172);
+	
+	var _reactLoader = __webpack_require__(273);
+	
+	var _reactLoader2 = _interopRequireDefault(_reactLoader);
+	
+	var _artist = __webpack_require__(260);
+	
+	var _artist2 = _interopRequireDefault(_artist);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Tour = exports.Tour = function (_Component) {
+	    _inherits(Tour, _Component);
+	
+	    function Tour() {
+	        _classCallCheck(this, Tour);
+	
+	        var _this = _possibleConstructorReturn(this, (Tour.__proto__ || Object.getPrototypeOf(Tour)).call(this));
+	
+	        _this.onClick = _this.onClick.bind(_this);
+	        return _this;
+	    }
+	
+	    _createClass(Tour, [{
+	        key: 'onClick',
+	        value: function onClick(data) {
+	            console.log(data);
+	            this.props.dispatch(_artist2.default.saveTour(data));
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            if (this.props.artistTourDates !== null) {
+	                var artistTourDates = this.props.artistTourDates.tour.map(function (artistTourDate) {
+	                    var _this2 = this;
+	
+	                    return _react2.default.createElement(
+	                        'li',
+	                        { key: artistTourDate.id },
+	                        artistTourDate.title,
+	                        ' ',
+	                        artistTourDate.formatted_datetime,
+	                        artistTourDate.ticket_type,
+	                        ': ',
+	                        _react2.default.createElement(
+	                            'a',
+	                            { href: artistTourDate.ticket_url },
+	                            artistTourDate.ticket_status
+	                        ),
+	                        _react2.default.createElement(
+	                            'button',
+	                            { type: 'submit', onClick: function onClick() {
+	                                    return _this2.onClick({ artistTourDate: artistTourDate });
+	                                } },
+	                            'Save'
+	                        )
+	                    );
+	                }, this);
+	                return _react2.default.createElement(
+	                    'div',
+	                    null,
+	                    _react2.default.createElement(
+	                        'ul',
+	                        null,
+	                        artistTourDates
+	                    )
+	                );
+	            } else {
+	                return _react2.default.createElement('p', null);
+	            }
+	        }
+	    }]);
+	
+	    return Tour;
+	}(_react.Component);
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+	    return {
+	        artistTourDates: state.TourReducer.tour
+	    };
+	};
+	exports.default = (0, _reactRedux.connect)(mapStateToProps)(Tour);
+
+/***/ },
+/* 277 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.SignIn = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(172);
+	
+	var _signIn = __webpack_require__(278);
+	
+	var _signIn2 = _interopRequireDefault(_signIn);
+	
+	var _reactRouter = __webpack_require__(195);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var SignIn = exports.SignIn = function (_Component) {
+	    _inherits(SignIn, _Component);
+	
+	    function SignIn(props) {
+	        _classCallCheck(this, SignIn);
+	
+	        var _this = _possibleConstructorReturn(this, (SignIn.__proto__ || Object.getPrototypeOf(SignIn)).call(this, props));
+	
+	        _this.onClick = _this.onClick.bind(_this);
+	        return _this;
+	    }
+	
+	    _createClass(SignIn, [{
+	        key: 'onClick',
+	        value: function onClick() {
+	            this.props.dispatch(_signIn2.default.signIn(this.refs.userName.value, this.refs.userPassword.value));
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'form',
+	                    { id: 'signIn-form' },
+	                    _react2.default.createElement('input', { type: 'text', ref: 'userName', placeholder: 'Username' }),
+	                    _react2.default.createElement('input', { type: 'password', ref: 'userPassword', placeholder: 'Password' }),
+	                    _react2.default.createElement(
+	                        'button',
+	                        { type: 'submit', onClick: this.onClick },
+	                        'Log In'
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+	
+	    return SignIn;
+	}(_react.Component);
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+	    return {
+	        userName: state.SignInReducer
+	    };
+	};
+	exports.default = (0, _reactRedux.connect)(mapStateToProps)(SignIn);
+
+/***/ },
+/* 278 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var USER_SIGN_IN = 'USER_SIGN_IN';
+	
+	var userSignIn = function userSignIn(username, password) {
+	    return {
+	        type: USER_SIGN_IN,
+	        username: username,
+	        password: password
+	    };
+	};
+	
+	var signIn = function signIn(userName, userPassword, username, password) {
+	    return function (dispatch) {
+	        var url = 'http://localhost:8080/login';
+	        $.ajax({
+	            url: url,
+	            type: 'post',
+	            dataType: 'json',
+	            data: JSON.stringify({
+	                username: userName,
+	                password: userPassword
+	            }),
+	            contentType: 'application/json'
+	        }).done(function (data) {
+	            localStorage.username = username;
+	            window.location.href = 'localhost:8080/search';
+	            if (data) {
+	                dispatch(userSignIn(username, password));
+	            }
+	        }).error(function (error) {
+	            return dispatch(console.log(error));
+	        });
+	    };
+	};
+	
+	exports.USER_SIGN_IN = USER_SIGN_IN;
+	exports.signIn = signIn;
 
 /***/ }
 /******/ ]);

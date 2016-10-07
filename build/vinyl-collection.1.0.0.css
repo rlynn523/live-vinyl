@@ -7,4 +7,21 @@ html {
 *:after {
   box-sizing: inherit;
 }
+.bandSearch {
+  text-align: center;
+  width: 100%;
+  display: inline-block;
+  margin-top: 3em;
+}
+.vinylList,
+.musicList {
+  height: 400px;
+  overflow: scroll;
+  display: inline-block;
+  width: 40%;
+  text-align: center;
+}
+ul {
+  list-style: none;
+}
 /*# sourceMappingURL=vinyl-collection.1.0.0.css.map */
