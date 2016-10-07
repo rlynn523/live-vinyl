@@ -1,4 +1,6 @@
 export default {
-     vinyl: null,
-     music: null
+    username: '',
+    vinyl: null,
+    music: null,
+    tour: null
 }
