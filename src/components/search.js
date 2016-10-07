@@ -14,10 +14,13 @@ export class Search extends Component {
         this.props.dispatch(
             actions.fetchAlbums(this.refs.userSearch.value)
         )
+        this.props.dispatch(
+            actions.fetchTour(this.refs.userSearch.value)
+        )
     }
     render() {
         return(
-            <div>
+            <div className='bandSearch'>
                 <form>
                     <input type='text' ref='userSearch'/>
                     <button type='button' onClick={this.onClick}>Search</button>
