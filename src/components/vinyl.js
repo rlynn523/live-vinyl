@@ -12,7 +12,7 @@ export class Vinyl extends Component {
                     {vinylRecord.title} {vinylRecord.year}</li>
             });
             return(
-                <div>
+                <div className='vinylList'>
                     <ul>
                         {vinylRecords}
                     </ul>
@@ -20,7 +20,7 @@ export class Vinyl extends Component {
             );
         } else {
             return (
-                <p>Start Your Search!</p>
+                <p></p>
             );
         }
     }
@@ -28,7 +28,6 @@ export class Vinyl extends Component {
 let mapStateToProps = function(state, props) {
     return {
         vinylRecords: state.ArtistReducer.vinyl,
-        artistAlbums: state.ArtistReducer.vinyl,
-    }
+     }
 }
 export default connect(mapStateToProps)(Vinyl);
