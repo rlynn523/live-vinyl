@@ -6,11 +6,11 @@ export class Music extends Component {
     render() {
         if(this.props.artistAlbums !== null){
             let artistAlbums = this.props.artistAlbums.music.items.map(function(artistAlbum){
-                return <li key={artistAlbum.id}><a href={artistAlbum.external_urls.spotify} target='_blank'><img src={artistAlbum.images[2].url} /></a>
-                {artistAlbum.name}</li>
+                return <li key={artistAlbum.id}><a href={artistAlbum.external_urls.spotify} target='_blank'><img src={artistAlbum.images[1].url} /></a>
+                </li>
             });
             return(
-                <div>
+                <div className='musicList'>
                     <ul>
                         {artistAlbums}
                     </ul>
