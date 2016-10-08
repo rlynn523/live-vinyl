@@ -9,14 +9,7 @@ export default function TourReducer (state = initialState, action) {
             tour: tour
         });
         return Tour;
-        break;
-        case action.SAVE_TOUR_DATE:
-        console.log(action);
-        let savedTourDates = action;
-        let userSavedTour = Object.assign({}, state, {
-            savedTourDates: savedTourDates
-        });
-        return userSavedTour;
+        default:
+            return state;
     }
-    return state;
 }

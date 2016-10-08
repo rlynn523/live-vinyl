@@ -9,6 +9,7 @@ export default function CreateUserReducer (state = initialState, action) {
             username: username
         });
         return NewUser;
+        default:
+            return state;
     }
-    return state;
 }

@@ -10,6 +10,7 @@ export default function SignInReducer (state = initialState, action) {
             username: username,
         });
         return ReturnUser;
+        default:
+            return state;
     }
-    return state;
 }

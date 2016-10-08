@@ -9,6 +9,7 @@ export default function MusicReducer (state = initialState, action) {
             music: music
         });
         return Music;
+        default:
+            return state;
     }
-    return state;
 }
