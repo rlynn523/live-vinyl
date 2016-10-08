@@ -11,6 +11,7 @@ export class Music extends Component {
             });
             return(
                 <div className='musicList'>
+                    <h2>Artist Albums</h2>
                     <ul>
                         {artistAlbums}
                     </ul>
