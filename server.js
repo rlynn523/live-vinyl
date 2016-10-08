@@ -14,14 +14,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 mongoose.connect('mongodb://localhost/music');
 
-// function isLoggedIn(req, res, next) {
-//     if (req.isAuthenticated())
-//         return next();
-//     res.sendStatus(401);
-// }
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated())
+        return next();
+    res.sendStatus(401);
+}
 
 // =====================================
-// Models ============================
+// Models ==============================
 // =====================================
 
 var User = require('./src/models/users');
@@ -73,10 +73,10 @@ var Vinyl = require('./src/models/vinyl');
 // app.use(session({ secret: 'lisa' }));
 // app.use(passport.initialize());
 // app.use(passport.session());
-
-// =====================================
-// Creating New Users ==================
-// =====================================
+//
+// // =====================================
+// // Creating New Users ==================
+// // =====================================
 //
 // app.post('/users', jsonParser, function(req, res) {
 //     if (!req.body) {
@@ -155,27 +155,41 @@ var Vinyl = require('./src/models/vinyl');
 app.post('/tours', function(req, res) {
     console.log(req.body);
     Tour.create({
-            title: req.body,
-    }, function(err, title) {
+            title: req.body.title,
+            date: req.body.date,
+            tickets: req.body.tickets
+    }, function(err, tour) {
             if (err) {
                 return res.status(500).json({
                     message: 'Internal Server Error'
                 });
             }
-            return res.status(201).json(title);
+            return res.status(201).json(tour);
         });
 })
-
-app.post('/vinyl', function(req, res) {
+app.get('/vinyls', function(req, res) {
+    Vinyl.find(function(err, vinyl) {
+        if (err) {
+            return res.status(500).json({
+                message: 'Internal Server Error'
+            });
+        }
+        return res.json(vinyl);
+    });
+});
+app.post('/vinyls', function(req, res) {
+    console.log(req.body);
     Vinyl.create({
             title: req.body.title,
-    }, function(err, title) {
+            country: req.body.country,
+            year: req.body.year,
+    }, function(err, vinyl) {
             if (err) {
                 return res.status(500).json({
                     message: 'Internal Server Error'
                 });
             }
-            return res.status(201).json(title);
+            return res.status(201).json(vinyl);
         });
 })
 
