@@ -7,6 +7,7 @@ import Vinyl from './components/vinyl';
 import Music from './components/music';
 import Tour from './components/tour';
 import SignIn from './components/signin';
+import Related from './components/related';
 
 const SearchContainer = function() {
     return (
@@ -15,6 +16,7 @@ const SearchContainer = function() {
             <Tour />
             <Music />
             <Vinyl />
+            <Related />
         </div>
     )
 }
