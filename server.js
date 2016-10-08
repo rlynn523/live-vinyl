@@ -167,6 +167,7 @@ app.post('/tours', function(req, res) {
             return res.status(201).json(tour);
         });
 })
+
 app.get('/vinyls', function(req, res) {
     Vinyl.find(function(err, vinyl) {
         if (err) {
@@ -177,20 +178,22 @@ app.get('/vinyls', function(req, res) {
         return res.json(vinyl);
     });
 });
-app.post('/vinyls', function(req, res) {
-    console.log(req.body);
-    Vinyl.create({
-            title: req.body.title,
-            country: req.body.country,
-            year: req.body.year,
-    }, function(err, vinyl) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Internal Server Error'
-                });
-            }
-            return res.status(201).json(vinyl);
-        });
+app.post('/vinyl', function(req, res) {
+    //  "This works for me! I commented everything out below as I did not set up a
+    //  local mongodb but the /vinyl works. perhaps you have an error below?"
+    
+    // Vinyl.create({
+    //         title: req.body.title,
+    //         country: req.body.country,
+    //         year: req.body.year,
+    // }, function(err, vinyl) {
+    //         if (err) {
+    //             return res.status(500).json({
+    //                 message: 'Internal Server Error'
+    //             });
+    //         }
+    //         return res.status(201).json(vinyl);
+    //     });
 })
 
 app.listen(process.env.PORT || 8080, process.env.IP);
