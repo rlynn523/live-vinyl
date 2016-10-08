@@ -9,6 +9,14 @@ export default function ArtistReducer (state = initialState, action) {
             vinyl: vinyl
         });
         return Artist;
+        break;
+        case actions.FETCH_RELATED_ARTISTS:
+            let related = action.related;
+            let Related = Object.assign({}, state, {
+                related: related
+            });
+            return Related;
+    default:
+        return state;
     }
-    return state;
 }
