@@ -1,5 +1,8 @@
 import fetch from 'isomorphic-fetch';
+var headers = new Headers();
+headers.append('User-Agent', 'FooBar/2.0');
 
+var req = new Request('https://api.discogs.com/releases/249504', { headers: headers });
 let FETCH_ARTIST_ALBUMS = 'FETCH_ARTIST_ALBUMS';
 let fetchArtistAlbums = function(vinyl) {
     return {
@@ -52,7 +55,9 @@ let fetchMusic = function(userSearch, music) {
        }).then(function(data) {
             if(data) {
                 let artistId = data.artists.items[0].id;
-                fetchRelated(artistId);
+                dispatch(
+                    fetchRelated(artistId)
+                );
                 url = 'https://api.spotify.com/v1/artists/'+artistId+'/albums?album_type=album';
                 return fetch(url).then(function(response) {
                     if (response.status < 200 || response.status >= 300) {
@@ -97,7 +102,6 @@ let fetchTour = function(userSearch, tour) {
            }
            return response.json();
        }).then(function(data) {
-           console.log('DATA', data);
             if(data) {
                 let tour = data;
                 dispatch(
@@ -123,20 +127,22 @@ let fetchRelatedArtists = function(related) {
 let fetchRelated = function(artistId, related) {
     return function(dispatch) {
         let url = 'https://api.spotify.com/v1/artists/'+artistId+'/related-artists';
-        $.ajax({
-            url: url,
-            type: 'get',
-            dataType: 'jsonp',
-            contentType: 'application/json',
-        }).done(function(data) {
+        return fetch(url).then(function(response) {
+            if (response.status < 200 || response.status >= 300) {
+               var error = new Error(response.statusText)
+               error.response = response
+               throw error;
+           }
+               return response.json();
+           }).then(function(data) {
+               let related = data;
             if(data) {
-                console.log(data);
                 dispatch(
                     fetchRelatedArtists(related)
                 )
             }
         })
-        .error(function(error) {
+        .catch(function(error) {
             return dispatch(
                 console.log(error)
             )
@@ -154,13 +160,18 @@ let saveTourDate = function(tour) {
 
 let saveTour = function(tour) {
     return function(dispatch) {
-        console.log('TOUR', tour);
-        let url = 'http://localhost:8080/tours';
-        return fetch(url, {headers: {
+        let url = '/tours';
+        return fetch(url, { method: 'POST',
+            headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json'
             },
-            method: 'post'}).then(function(response) {
+            body: JSON.stringify({
+                title: tour.title,
+                date: tour.formatted_datetime,
+                tickets: tour.ticket_url
+            })
+            }).then(function(response) {
             if (response.status < 200 || response.status >= 300) {
                var error = new Error(response.statusText)
                error.response = response
@@ -168,7 +179,6 @@ let saveTour = function(tour) {
            }
            return response.json();
        }).then(function(data) {
-           console.log('SAVE TOUR', data);
            let tour = data;
             if(data) {
                 dispatch(
@@ -176,14 +186,94 @@ let saveTour = function(tour) {
                 )
             }
         })
-        .error(function(error) {
+        .catch(function(error) {
             return dispatch(
                 console.log(error)
             )
         })
     }
 }
+let SAVE_ARTIST_VINYL = 'SAVE_ARTIST_VINYL';
+let saveArtistVinyl = function(vinyl) {
+    return {
+        type: SAVE_ARTIST_VINYL,
+        vinyl: vinyl
+    }
+}
 
+let saveVinyl = function(vinyl) {
+    return function(dispatch) {
+        let url = '/vinyls';
+        return fetch(url, { method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: vinyl.title,
+                country: vinyl.country,
+                year: vinyl.year
+            })
+            }).then(function(response) {
+            if (response.status < 200 || response.status >= 300) {
+               var error = new Error(response.statusText)
+               error.response = response
+               throw error;
+           }
+           return response.json();
+       }).then(function(data) {
+           console.log('VINYL', data);
+           let vinyl = data;
+            if(data) {
+                dispatch(
+                    saveArtistVinyl(vinyl)
+                )
+            }
+        })
+        .catch(function(error) {
+            return dispatch(
+                console.log(error)
+            )
+        })
+    }
+}
+let GET_SAVED_VINYL = 'GET_SAVED_VINYL';
+let getSavedVinyl = function(vinyl) {
+    return {
+        type: GET_SAVED_VINYL,
+        vinyl: vinyl
+    }
+}
+let savedVinyl = function(vinyl) {
+    console.log(vinyl);
+    return function(dispatch) {
+        let url = '/vinyls';
+        return fetch(url).then(function(response) {
+            if (response.status < 200 || response.status >= 300) {
+               var error = new Error(response.statusText)
+               error.response = response
+               throw error;
+               }
+               return response.json();
+           }).then(function(data) {
+            if(data) {
+            let vinyl = data;
+                dispatch(
+                    getSavedVinyl(vinyl)
+                )
+            }
+        })
+        .catch(function(error) {
+            return dispatch(
+                console.log(error)
+            )
+        })
+    }
+}
+exports.GET_SAVED_VINYL = GET_SAVED_VINYL;
+exports.savedVinyl = savedVinyl;
+exports.SAVE_ARTIST_VINYL = SAVE_ARTIST_VINYL;
+exports.saveVinyl = saveVinyl;
 exports.SAVE_TOUR_DATE = SAVE_TOUR_DATE;
 exports.saveTour = saveTour
 exports.FETCH_ARTIST_MUSIC = FETCH_ARTIST_MUSIC;
