@@ -9,13 +9,13 @@ export class Tour extends Component {
         this.onClick = this.onClick.bind(this);
     }
     onClick(data) {
-        console.log(data);
         this.props.dispatch(
-            actions.saveTour(data)
+            actions.saveTour(data.artistTourDate),
+            alert('Tour Date Saved!')
         )
     }
     render() {
-        if(this.props.artistTourDates !== null){
+        if(this.props.artistTourDates !== null) {
             let artistTourDates = this.props.artistTourDates.tour.map(function(artistTourDate){
                 return <li key={artistTourDate.id}>
                     {artistTourDate.title} {artistTourDate.formatted_datetime}
@@ -24,7 +24,8 @@ export class Tour extends Component {
                 </li>
             }, this);
             return(
-                <div>
+                <div className='musicList'>
+                    <h2>Tour Dates</h2>
                     <ul>
                         {artistTourDates}
                     </ul>
