@@ -9,6 +9,13 @@ export default function MusicReducer (state = initialState, action) {
             music: music
         });
         return Music;
+        break;
+        case actions.FETCH_RELATED_ARTISTS:
+            let related = action.related;
+            let Related = Object.assign({}, state, {
+                related: related
+            });
+            return Related;
         default:
             return state;
     }
