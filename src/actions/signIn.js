@@ -1,3 +1,5 @@
+import fetch from 'isomorphic-fetch';
+
 let USER_SIGN_IN = 'USER_SIGN_IN';
 
 let userSignIn = function(username, password) {
@@ -10,26 +12,29 @@ let userSignIn = function(username, password) {
 
 let signIn = function(userName, userPassword, username, password) {
     return function(dispatch) {
-        let url = 'http://localhost:8080/login';
-        $.ajax({
-            url: url,
-            type: 'post',
-            dataType: 'json',
-            data: JSON.stringify({
-                username: userName,
-                password: userPassword
-            }),
-            contentType: 'application/json',
-        }).done(function(data) {
+        let url = '/login';
+        return fetch(url, { method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+             username: userName,
+             password: userPassword
+          })
+      }).then(function(data) {
+            console.log('AUTH', data);
+            console.log('USERNAME', username);
+            console.log('LOCALSTORAGE', localStorage.username);
             localStorage.username = username;
-            window.location.href = 'localhost:8080/search';
+            window.location.href = '#/search';
             if(data) {
                 dispatch(
                     userSignIn(username, password)
                 )
             }
         })
-        .error(function(error) {
+        .catch(function(error) {
             return dispatch(
                 console.log(error)
             )

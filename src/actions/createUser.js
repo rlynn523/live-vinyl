@@ -1,3 +1,5 @@
+import fetch from 'isomorphic-fetch';
+
 let CREATE_NEW_USER = 'CREATE_NEW_USER';
 
 let createNewUser = function(username, password) {
@@ -9,25 +11,25 @@ let createNewUser = function(username, password) {
 }
 let createUser = function(newUser, newUserPassword, username, password) {
     return function(dispatch) {
-        let url = 'http://localhost:8080/users';
-        $.ajax({
-            url: url,
-            type: 'post',
-            dataType: 'json',
-            data: JSON.stringify({
+        let url = '/users';
+        return fetch(url, { method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+          },
+            body: JSON.stringify({
                 username: newUser,
                 password: newUserPassword
-            }),
-            contentType: 'application/json',
-        }).done(function(data) {
+            })
+        }).then(function(data) {
             if(data) {
-                console.log(password);
+                console.log('NEW USER', username, password);
                 dispatch(
                     createNewUser(username, password)
                 )
             }
         })
-        .error(function(error) {
+        .catch(function(error) {
             return dispatch(
                 console.log(error)
             )
