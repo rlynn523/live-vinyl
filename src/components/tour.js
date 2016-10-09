@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
-import actions from '../actions/artist';
+import actions from '../actions/tour';
+import { MuiThemeProvider, Paper, RaisedButton } from 'material-ui';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
 
 export class Tour extends Component {
     constructor() {
@@ -15,21 +18,27 @@ export class Tour extends Component {
         )
     }
     render() {
-        if(this.props.artistTourDates !== null) {
+        if(this.props.artistTourDates !== null && this.props.artistTourDates.tour.length === 0) {
+            return(
+                <p>No Dates</p>
+            )
+        } else if (this.props.artistTourDates !== null) {
             let artistTourDates = this.props.artistTourDates.tour.map(function(artistTourDate){
                 return <li key={artistTourDate.id}>
-                    {artistTourDate.title} {artistTourDate.formatted_datetime}
-                    {artistTourDate.ticket_type}: <a href={artistTourDate.ticket_url}>{artistTourDate.ticket_status}</a>
-                <button type='submit' onClick={() => this.onClick({artistTourDate})}>Save</button>
+                    {artistTourDate.title} <br></br> {artistTourDate.formatted_datetime} <br></br> {artistTourDate.ticket_type}: <a href={artistTourDate.ticket_url}>{artistTourDate.ticket_status}</a><br></br><RaisedButton className='tourButton' type='submit' label='Save Tour Date' primary={true} onClick={() => this.onClick({artistTourDate})} />
                 </li>
             }, this);
             return(
-                <div className='musicList'>
-                    <h2>Tour Dates</h2>
-                    <ul>
-                        {artistTourDates}
-                    </ul>
-                </div>
+                <MuiThemeProvider>
+                    <Paper className='paper'>
+                        <div>
+                            <p className='tourTitle'>Tour Dates</p>
+                            <ul className='tourList'>
+                                {artistTourDates}
+                            </ul>
+                        </div>
+                    </Paper>
+                </MuiThemeProvider>
             );
         } else {
             return (
