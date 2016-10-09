@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import actions from '../actions/artist';
+import actions from '../actions/saved';
 
 export class Saved extends Component {
     componentDidMount() {
@@ -16,7 +16,6 @@ export class Saved extends Component {
     }
 }
 let mapStateToProps = function(state, props) {
-    console.log('STATE', state);
     return {
         savedVinyl: state.SavedVinylReducer
     }
