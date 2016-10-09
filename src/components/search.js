@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import actions from '../actions/artist';
+import * as action1 from '../actions/artist';
+import * as action2 from '../actions/vinyl';
+import * as action3 from '../actions/tour';
+import Saved from './saved';
 
 export class Search extends Component {
     constructor(props) {
@@ -9,13 +12,13 @@ export class Search extends Component {
     }
     onClick() {
         this.props.dispatch(
-            actions.fetchMusic(this.refs.userSearch.value)
+            action1.fetchMusic(this.refs.userSearch.value)
         )
         this.props.dispatch(
-            actions.fetchAlbums(this.refs.userSearch.value)
+            action2.fetchVinyl(this.refs.userSearch.value)
         )
         this.props.dispatch(
-            actions.fetchTour(this.refs.userSearch.value)
+            action3.fetchTour(this.refs.userSearch.value)
         )
     }
     render() {
@@ -25,13 +28,14 @@ export class Search extends Component {
                     <input type='text' ref='userSearch'/>
                     <button type='button' onClick={this.onClick}>Search</button>
                 </form>
+                <Saved />
             </div>
         );
     }
 }
 let mapStateToProps = function(state, props) {
     return {
-        vinylRecords: state.ArtistReducer.vinyl,
+        vinylRecords: state.VinylReducer.vinyl,
         music: state.MusicReducer.music
     }
 }
