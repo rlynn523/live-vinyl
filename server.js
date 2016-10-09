@@ -8,32 +8,12 @@ var config = require('./config.js');
 var bcrypt = require('bcryptjs');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-app.use(express.static('public'));
+app.use(express.static('build'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(cookieParser('lisa'));
 mongoose.connect('mongodb://localhost/music');
-
-function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated())
-        return next();
-    res.sendStatus(401);
-}
-
-// =====================================
-// Models ==============================
-// =====================================
-
-var User = require('./src/models/users');
-var Tour = require('./src/models/tours');
-var Vinyl = require('./src/models/vinyl');
-
-// =====================================
-// Passport ============================
-// =====================================
-
 // var passport = require('passport') , LocalStrategy = require('passport-local').Strategy;
-//
 // passport.use('local', new LocalStrategy(
 //   function(username, password, done) {
 //     User.findOne({ username: username }, function (err, user) {
@@ -51,6 +31,25 @@ var Vinyl = require('./src/models/vinyl');
 //     });
 //   }
 // ));
+// function isLoggedIn(req, res, next) {
+//     console.log('isLoggedIn', req.isAuthenticated());
+//     if (req.isAuthenticated())
+//         return next();
+//     res.sendStatus(401);
+// }
+
+// =====================================
+// Models ==============================
+// =====================================
+
+var User = require('./src/models/users');
+var Tour = require('./src/models/tours');
+var Vinyl = require('./src/models/vinyl');
+
+// =====================================
+// Passport ============================
+// =====================================
+
 // function passvalidatePassword(password, userpassword, callback) {
 //     bcrypt.compare(password, userpassword, function(err, isValid) {
 //         if (err) {
@@ -61,11 +60,14 @@ var Vinyl = require('./src/models/vinyl');
 //     });
 // }
 // passport.serializeUser(function(user, done) {
+//     console.log('SERIALIZE',user);
 //   done(null, user.id);
 // });
 //
 // passport.deserializeUser(function(id, done) {
+//     console.log('ID', id);
 //   User.findById(id, function(err, user) {
+//       console.log('USER', user);
 //     done(err, user);
 //   });
 // });
@@ -73,11 +75,11 @@ var Vinyl = require('./src/models/vinyl');
 // app.use(session({ secret: 'lisa' }));
 // app.use(passport.initialize());
 // app.use(passport.session());
-//
+
 // // =====================================
 // // Creating New Users ==================
 // // =====================================
-//
+
 // app.post('/users', jsonParser, function(req, res) {
 //     if (!req.body) {
 //         return res.status(400).json({
@@ -149,11 +151,12 @@ var Vinyl = require('./src/models/vinyl');
 // });
 //
 // app.post('/login', passport.authenticate('local'), function(req, res) {
+//     console.log('LOGIN', req.user);
+//     console.log('isLoggedIn /LOGIN', req.isAuthenticated());
 //     return res.status(200).json({});
 // });
 
 app.post('/tours', function(req, res) {
-    console.log(req.body);
     Tour.create({
             title: req.body.title,
             date: req.body.date,
@@ -167,7 +170,7 @@ app.post('/tours', function(req, res) {
             return res.status(201).json(tour);
         });
 })
-app.get('/vinyls', function(req, res) {
+app.get('/vinyl', function(req, res) {
     Vinyl.find(function(err, vinyl) {
         if (err) {
             return res.status(500).json({
@@ -177,12 +180,12 @@ app.get('/vinyls', function(req, res) {
         return res.json(vinyl);
     });
 });
-app.post('/vinyls', function(req, res) {
+app.post('/vinyl', function(req, res) {
     console.log(req.body);
     Vinyl.create({
             title: req.body.title,
             country: req.body.country,
-            year: req.body.year,
+            year: req.body.year
     }, function(err, vinyl) {
             if (err) {
                 return res.status(500).json({
