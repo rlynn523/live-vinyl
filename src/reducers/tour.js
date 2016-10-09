@@ -1,4 +1,4 @@
-import actions from '../actions/artist';
+import actions from '../actions/tour';
 import initialState from './initialstate';
 
 export default function TourReducer (state = initialState, action) {
