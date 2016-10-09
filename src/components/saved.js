@@ -4,8 +4,9 @@ import actions from '../actions/artist';
 
 export class Saved extends Component {
     componentDidMount() {
+        console.log('PROPS', this.props)
         this.props.dispatch(
-            actions.savedVinyl()
+            actions.savedVinyl(this.props)
         )
     }
     render() {
@@ -15,9 +16,9 @@ export class Saved extends Component {
     }
 }
 let mapStateToProps = function(state, props) {
+    console.log('STATE', state);
     return {
-        vinylRecords: state.ArtistReducer.vinyl,
-        music: state.MusicReducer.music
+        savedVinyl: state.SavedVinylReducer
     }
 }
 export default connect(mapStateToProps)(Saved);
