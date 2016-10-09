@@ -1,6 +1,8 @@
 export default {
     username: '',
+    savedVinyl: [],
     vinyl: null,
     music: null,
-    tour: null
+    tour: null,
+    related: null
 }
