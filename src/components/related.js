@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import actions from '../actions/artist';
+import { MuiThemeProvider, Paper } from 'material-ui';
 
 export class Related extends Component {
     render() {
@@ -9,12 +10,16 @@ export class Related extends Component {
                 return <li key={relatedArtist.id}>{relatedArtist.name}</li>
             });
             return(
-                <div className='musicList'>
-                    <h2>Related Artists</h2>
-                    <ul>
-                        {relatedArtists}
-                    </ul>
-                </div>
+                <MuiThemeProvider>
+                    <Paper className='paper'>
+                        <div>
+                            <h2>Related Artists</h2>
+                            <ul>
+                                {relatedArtists}
+                            </ul>
+                        </div>
+                    </Paper>
+                </MuiThemeProvider>
             );
         } else {
             return (
@@ -25,7 +30,7 @@ export class Related extends Component {
 }
 let mapStateToProps = function(state, props) {
     return {
-        relatedArtists: state.ArtistReducer.related,
+        relatedArtists: state.MusicReducer.related,
     }
 }
 export default connect(mapStateToProps)(Related);

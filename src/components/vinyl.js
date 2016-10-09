@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
-import actions from '../actions/artist';
+import actions from '../actions/vinyl';
+import { MuiThemeProvider, Paper } from 'material-ui';
 
 export class Vinyl extends Component {
     constructor() {
@@ -24,12 +25,16 @@ export class Vinyl extends Component {
                 </li>
             }, this);
             return(
-                <div className='vinylList'>
-                    <h2>Artist Vinyl Releases</h2>
-                    <ul>
-                        {vinylRecords}
-                    </ul>
-                </div>
+                <MuiThemeProvider>
+                    <Paper>
+                        <div className='vinylList'>
+                            <h2>Artist Vinyl Releases</h2>
+                            <ul>
+                                {vinylRecords}
+                            </ul>
+                        </div>
+                    </Paper>
+                </MuiThemeProvider>
             );
         } else {
             return (
@@ -39,8 +44,9 @@ export class Vinyl extends Component {
     }
 }
 let mapStateToProps = function(state, props) {
+    console.log('STATE', state.VinylReducer);
     return {
-        vinylRecords: state.ArtistReducer.vinyl,
+        vinylRecords: state.VinylReducer.vinyl,
      }
 }
 export default connect(mapStateToProps)(Vinyl);
