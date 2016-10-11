@@ -13,15 +13,33 @@ html {
   display: inline-block;
   margin-top: 3em;
 }
-.vinylList,
-.musicList {
-  height: 400px;
-  overflow: scroll;
-  display: inline-block;
-  width: 40%;
-  text-align: center;
+.paper {
+  height: 25%;
+  width: 90%;
+  margin: 0 auto;
 }
 ul {
   list-style: none;
+}
+.tourTitle,
+.musicTitle {
+  text-align: center;
+  font-size: 2em;
+  padding: 1em 0;
+}
+.tourButton {
+  margin-top: .5em;
+}
+.tourList,
+.albumList {
+  height: 31.25em;
+  overflow: scroll;
+  text-align: center;
+}
+.tourList li,
+.albumList li {
+  padding: 1.25em 0em;
+  display: inline-block;
+  width: 45%;
 }
 /*# sourceMappingURL=vinyl-collection.1.0.0.css.map */
