@@ -3,10 +3,10 @@ import MusicReducer from './music';
 import VinylReducer from './vinyl';
 import TourReducer from './tour';
 import CreateUserReducer from './createUser';
-import SavedVinylReducer from './saved';
+import SavedDataReducer from './saved';
 
 export default combineReducers({
-    SavedVinylReducer,
+    SavedDataReducer,
     MusicReducer,
     VinylReducer,
     TourReducer,
