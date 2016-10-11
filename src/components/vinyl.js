@@ -44,7 +44,6 @@ export class Vinyl extends Component {
     }
 }
 let mapStateToProps = function(state, props) {
-    console.log('STATE', state.VinylReducer);
     return {
         vinylRecords: state.VinylReducer.vinyl,
      }
