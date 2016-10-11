@@ -8,6 +8,8 @@ import Music from './components/music';
 import Tour from './components/tour';
 import SignIn from './components/signin';
 import Related from './components/related';
+import SavedVinyl from './components/savedVinyl';
+import SavedTours from './components/savedTours';
 
 const SearchContainer = function() {
     return (
@@ -21,12 +23,22 @@ const SearchContainer = function() {
     )
 }
 
+const SavedContainer = function() {
+    return (
+        <div>
+            <SavedVinyl />
+            <SavedTours />
+        </div>
+    )
+}
+
 let mainRouter = (
     <Router history={hashHistory}>
         <Route path='/' component={Landing} />
         <Route path='/sign-in' component={SignIn} />
         <Route path='/create-user' component={CreateUser} />
         <Route path='/search' component={SearchContainer} />
+        <Route path='/saved' component={SavedContainer} />
     </Router>
 );
 
