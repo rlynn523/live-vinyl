@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import * as action1 from '../actions/artist';
 import * as action2 from '../actions/vinyl';
 import * as action3 from '../actions/tour';
-import Saved from './saved';
 
 export class Search extends Component {
     constructor(props) {
@@ -28,7 +27,6 @@ export class Search extends Component {
                     <input type='text' ref='userSearch'/>
                     <button type='button' onClick={this.onClick}>Search</button>
                 </form>
-                <Saved />
             </div>
         );
     }
