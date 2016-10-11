@@ -156,6 +156,20 @@ var Vinyl = require('./src/models/vinyl');
 //     return res.status(200).json({});
 // });
 
+// =====================================
+// Tour Routes =========================
+// =====================================
+
+app.get('/tours', function(req, res) {
+    Tour.find(function(err, tour) {
+        if (err) {
+            return res.status(500).json({
+                message: 'Internal Server Error'
+            });
+        }
+        return res.json(tour);
+    });
+});
 app.post('/tours', function(req, res) {
     Tour.create({
             title: req.body.title,
@@ -170,6 +184,24 @@ app.post('/tours', function(req, res) {
             return res.status(201).json(tour);
         });
 })
+app.delete('/tours/:id', function(req, res) {
+    Tour.remove({
+            _id: req.params.id
+        },
+        function(err, tour) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Internal Server Error'
+                });
+            }
+            return res.status(200).json(tour);
+        });
+});
+
+// =====================================
+// Vinyl Routes ========================
+// =====================================
+
 app.get('/vinyl', function(req, res) {
     Vinyl.find(function(err, vinyl) {
         if (err) {
@@ -181,7 +213,6 @@ app.get('/vinyl', function(req, res) {
     });
 });
 app.post('/vinyl', function(req, res) {
-    console.log(req.body);
     Vinyl.create({
             title: req.body.title,
             country: req.body.country,
@@ -195,5 +226,18 @@ app.post('/vinyl', function(req, res) {
             return res.status(201).json(vinyl);
         });
 })
+app.delete('/vinyl/:id', function(req, res) {
+    Vinyl.remove({
+            _id: req.params.id
+        },
+        function(err, vinyl) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Internal Server Error'
+                });
+            }
+            return res.status(200).json(vinyl);
+        });
+});
 
 app.listen(process.env.PORT || 8080, process.env.IP);
