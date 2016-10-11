@@ -45,7 +45,6 @@ let saveArtistVinyl = function(vinyl) {
 let saveVinyl = function(vinyl) {
     return function(dispatch) {
         let url = '/vinyl';
-        console.log('SAVE', vinyl);
         return fetch(url, { method: 'POST',
         headers: {
           'Accept': 'application/json',
