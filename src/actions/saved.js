@@ -1,49 +1,5 @@
 import fetch from 'isomorphic-fetch';
 
-let SAVE_TOUR_DATE = 'SAVE_TOUR_DATE';
-let saveTourDate = function(tour) {
-    return {
-        type: SAVE_TOUR_DATE,
-        tour: tour
-    }
-}
-
-let saveTour = function(tour) {
-    return function(dispatch) {
-        let url = '/tours';
-        return fetch(url, { method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                title: tour.title,
-                date: tour.formatted_datetime,
-                tickets: tour.ticket_url
-            })
-            }).then(function(response) {
-            if (response.status < 200 || response.status >= 300) {
-               var error = new Error(response.statusText)
-               error.response = response
-               throw error;
-           }
-           return response.json();
-       }).then(function(data) {
-           let tour = data;
-            if(data) {
-                dispatch(
-                    saveTourDate(tour)
-                )
-            }
-        })
-        .catch(function(error) {
-            return dispatch(
-                console.log(error)
-            )
-        })
-    }
-}
-
 let GET_SAVED_VINYL = 'GET_SAVED_VINYL';
 let getSavedVinyl = function(vinyl) {
     return {
@@ -62,7 +18,6 @@ let savedVinyl = function(vinyl) {
                }
                return response.json();
            }).then(function(data) {
-               console.log('SAVED VINYL', data);
             if(data) {
             let vinyl = data;
                 dispatch(
@@ -77,7 +32,41 @@ let savedVinyl = function(vinyl) {
         })
     }
 }
+
+let GET_SAVED_TOURS = 'GET_SAVED_TOURS';
+let getSavedTours = function(tour) {
+    return {
+        type: GET_SAVED_TOURS,
+        tour: tour
+    }
+}
+let savedTours = function(tour) {
+    return function(dispatch) {
+        let url = '/tours';
+        return fetch(url).then(function(response) {
+            if (response.status < 200 || response.status >= 300) {
+               var error = new Error(response.statusText)
+               error.response = response
+               throw error;
+               }
+               return response.json();
+           }).then(function(data) {
+            if(data) {
+            let tours = data;
+                dispatch(
+                    getSavedTours(tours)
+                )
+            }
+        })
+        .catch(function(error) {
+            return dispatch(
+                console.log(error)
+            )
+        })
+    }
+}
+
 exports.GET_SAVED_VINYL = GET_SAVED_VINYL;
 exports.savedVinyl = savedVinyl;
-exports.SAVE_TOUR_DATE = SAVE_TOUR_DATE;
-exports.saveTour = saveTour
+exports.GET_SAVED_TOURS = GET_SAVED_TOURS;
+exports.savedTours = savedTours;
