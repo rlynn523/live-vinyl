@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as action1 from '../actions/saved';
 import * as action2 from '../actions/delete';
-import { MuiThemeProvider, RaisedButton } from 'material-ui';
+import { MuiThemeProvider, RaisedButton, Paper, Chip } from 'material-ui';
 
 export class SavedTours extends Component {
     constructor() {
@@ -17,22 +17,29 @@ export class SavedTours extends Component {
     onClick(data) {
         this.props.dispatch(
             action2.deleteTour(data.savedTour),
-            alert('Tour Date Removed!')
+            alert(data.savedTour.title + ' Removed!')
+        )
+        this.props.dispatch(
+            action1.savedTours()
         )
     }
     render() {
         if(this.props.savedTours !== null){
             let savedTours = this.props.savedTours.tour.map(function(savedTour){
-                return <li key={savedTour._id}>{savedTour.title}<RaisedButton type='submit' label='Delete Tour Date' primary={true} onClick={() => this.onClick({savedTour})} /></li>
+                    return <li key={savedTour._id}><Chip style={{margin: '5px auto'}} backgroundColor={'#C8E6C9'}>{savedTour.title}</Chip>
+                    <RaisedButton className='deleteButton' label='Delete Tour Date' backgroundColor='#FF9800' labelColor='#FFFFFF' onClick={() => this.onClick({savedTour})} />
+                </li>
             },this);
             return(
                 <MuiThemeProvider>
-                    <div>
-                        <h2>Saved Tour Dates</h2>
-                        <ul>
-                            {savedTours}
-                        </ul>
-                    </div>
+                    <Paper className='paperSaved'>
+                        <div>
+                            <p className='savedToursTitle' style={{fontWeight: 'lighter'}}>Saved Tour Dates</p>
+                            <ul className='savedToursList'>
+                                {savedTours}
+                            </ul>
+                        </div>
+                    </Paper>
                 </MuiThemeProvider>
             );
         } else {
