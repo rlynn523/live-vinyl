@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as action1 from '../actions/saved';
 import * as action2 from '../actions/delete';
-import { MuiThemeProvider, RaisedButton } from 'material-ui';
+import { MuiThemeProvider, RaisedButton, Paper, Chip } from 'material-ui';
 
 export class SavedVinyl extends Component {
     constructor() {
@@ -17,22 +17,29 @@ export class SavedVinyl extends Component {
     onClick(data) {
         this.props.dispatch(
             action2.deleteVinyl(data.savedVinyl),
-            alert('Vinyl Removed From Collections!')
+            alert(data.savedVinyl.title + ' Removed From Collection!')
+        )
+        this.props.dispatch(
+            action1.savedVinyl()
         )
     }
     render() {
         if(this.props.savedVinyls !== null){
             let savedVinyls = this.props.savedVinyls.vinyl.map(function(savedVinyl){
-                return <li key={savedVinyl._id}>{savedVinyl.title}<br></br>{savedVinyl.country}<br></br>{savedVinyl.year}<RaisedButton type='submit' label='Delete Vinyl' primary={true} onClick={() => this.onClick({savedVinyl})} /></li>
+                return <li key={savedVinyl._id}><Chip style={{margin: '5px auto'}} backgroundColor={'#C8E6C9'}>{savedVinyl.title} {savedVinyl.country} {savedVinyl.year}</Chip>
+                <RaisedButton className='deleteButton' backgroundColor='#FF9800' labelColor='#FFFFFF' label='Delete Vinyl' onClick={() => this.onClick({savedVinyl})} />
+                </li>
             },this);
             return(
                 <MuiThemeProvider>
-                    <div>
-                        <h2>Records In Your Collection</h2>
-                        <ul>
-                            {savedVinyls}
-                        </ul>
-                    </div>
+                    <Paper className='paperSaved'>
+                        <div>
+                            <p className='savedVinylTitle' style={{fontWeight: 'lighter'}}>Records In Your Collection</p>
+                            <ul className='savedVinylList'>
+                                {savedVinyls}
+                            </ul>
+                        </div>
+                    </Paper>
                 </MuiThemeProvider>
             );
         } else {
