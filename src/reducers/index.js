@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import MusicReducer from './music';
+import ArtistReducer from './artist';
 import VinylReducer from './vinyl';
 import TourReducer from './tour';
 import CreateUserReducer from './createUser';
@@ -7,7 +7,7 @@ import SavedDataReducer from './saved';
 
 export default combineReducers({
     SavedDataReducer,
-    MusicReducer,
+    ArtistReducer,
     VinylReducer,
     TourReducer,
     CreateUserReducer
