@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import actions from '../actions/artist';
-import { MuiThemeProvider, Paper } from 'material-ui';
+import { MuiThemeProvider, Paper, Chip } from 'material-ui';
 
 export class Music extends Component {
     render() {
@@ -9,14 +9,16 @@ export class Music extends Component {
             let artistAlbums = this.props.artistAlbums.music.items.map(function(artistAlbum){
                 return <li key={artistAlbum.id}><a href={artistAlbum.external_urls.spotify} target='_blank'><img src={artistAlbum.images[1].url} /></a>
                     <br></br>
-                    <p>{artistAlbum.name}</p>
+                    <Chip className='albumChip' backgroundColor={'#C8E6C9'} style={{margin: '8px auto'}}><a href={artistAlbum.external_urls.spotify} target='_blank'>{artistAlbum.name}</a></Chip>
                 </li>
             });
             return(
                 <MuiThemeProvider>
                     <Paper className='paper'>
                         <div>
-                            <p className='musicTitle'>Artist Albums</p>
+                            <Paper>
+                                <p className='musicTitle' style={{fontWeight: 'lighter'}}>Artist Albums</p>
+                            </Paper>
                             <ul className='albumList'>
                                 {artistAlbums}
                             </ul>
@@ -26,14 +28,14 @@ export class Music extends Component {
             );
         } else {
             return (
-                <p>Start Your Search!</p>
+                <p></p>
             );
         }
     }
 }
 let mapStateToProps = function(state, props) {
     return {
-        artistAlbums: state.MusicReducer.music,
+        artistAlbums: state.ArtistReducer.music,
     }
 }
 export default connect(mapStateToProps)(Music);
