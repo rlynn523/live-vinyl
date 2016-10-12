@@ -44,32 +44,24 @@ let saveTourDate = function(tour) {
 let saveTour = function(tour) {
     return function(dispatch) {
         let url = '/tours';
-        return fetch(url, { method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
+        $.ajax({
+            url: url,
+            type: 'post',
+            dataType: 'json',
+            data: JSON.stringify({
                 title: tour.title,
                 date: tour.formatted_datetime,
                 tickets: tour.ticket_url
-            })
-            }).then(function(response) {
-            if (response.status < 200 || response.status >= 300) {
-               var error = new Error(response.statusText)
-               error.response = response
-               throw error;
-           }
-           return response.json();
-       }).then(function(data) {
+            }),
+            contentType: 'application/json',
+        }).done(function(data) {
            let tour = data;
             if(data) {
                 dispatch(
                     saveTourDate(tour)
                 )
             }
-        })
-        .catch(function(error) {
+        }).fail(function(error) {
             return dispatch(
                 console.log(error)
             )

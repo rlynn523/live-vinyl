@@ -34,6 +34,7 @@ let fetchVinyl = function(userSearch, vinyl) {
         })
     }
 }
+
 let SAVE_ARTIST_VINYL = 'SAVE_ARTIST_VINYL';
 let saveArtistVinyl = function(vinyl) {
     return {
@@ -41,36 +42,27 @@ let saveArtistVinyl = function(vinyl) {
         vinyl: vinyl
     }
 }
-
 let saveVinyl = function(vinyl) {
     return function(dispatch) {
         let url = '/vinyl';
-        return fetch(url, { method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-            body: JSON.stringify({
+        $.ajax({
+            url: url,
+            type: 'post',
+            dataType: 'json',
+            data: JSON.stringify({
                 title: vinyl.title,
                 country: vinyl.country,
                 year: vinyl.year
-            })
-            }).then(function(response) {
-            if (response.status < 200 || response.status >= 300) {
-               var error = new Error(response.statusText)
-               error.response = response
-               throw error;
-           }
-           return response.json();
-       }).then(function(data) {
-           let vinyl = data;
+            }),
+            contentType: 'application/json',
+        }).done(function(data) {
+            let vinyl = data;
             if(data) {
                 dispatch(
                     saveArtistVinyl(vinyl)
                 )
-            }
-        })
-        .catch(function(error) {
+             }
+        }).fail(function(error) {
             return dispatch(
                 console.log(error)
             )

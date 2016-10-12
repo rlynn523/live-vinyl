@@ -12,28 +12,25 @@ let createNewUser = function(username, password) {
 let createUser = function(newUser, newUserPassword, username, password) {
     return function(dispatch) {
         let url = '/users';
-        return fetch(url, { method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-          },
-            body: JSON.stringify({
+        $.ajax({
+            url: url,
+            type: 'post',
+            dataType: 'json',
+            data: JSON.stringify({
                 username: newUser,
                 password: newUserPassword
-            })
-        }).then(function(data) {
+            }),
+            contentType: 'application/json',
+        }).done(function(data){
+            window.location.href = '/#/sign-in';
             if(data) {
-                console.log('NEW USER', username, password);
                 dispatch(
                     createNewUser(username, password)
                 )
             }
-        })
-        .catch(function(error) {
-            return dispatch(
-                console.log(error)
-            )
-        })
+        }).fail(function(err){
+            console.log(err);
+        });
     }
 }
 
