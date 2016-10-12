@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import actions from '../actions/signIn'
-import { browserHistory } from 'react-router'
+import { MuiThemeProvider, RaisedButton } from 'material-ui';
 
 export class SignIn extends Component {
     constructor(props) {
@@ -15,13 +15,16 @@ export class SignIn extends Component {
     }
     render() {
         return(
-            <div>
-                <form id='signIn-form'>
-                    <input type='text' ref='userName' placeholder='Username'/>
-                    <input type='password' ref='userPassword' placeholder='Password'/>
-                    <button type='submit' onClick={this.onClick}>Log In</button>
-                </form>
-            </div>
+            <MuiThemeProvider>
+                <div>
+                    <div className='signIn'>
+                        <p className='titleSignIn' style={{fontWeight: 'lighter'}}>Sign In</p>
+                        <input type='text' ref='userName' placeholder='Username'/>
+                        <input type='password' ref='userPassword' placeholder='Password'/>
+                        <RaisedButton className='signInButton' onClick={this.onClick} backgroundColor='#FF9800' labelColor='#FFFFFF' label='Sign In' />
+                    </div>
+                </div>
+            </MuiThemeProvider>
         )
     }
 }
