@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import actions from '../actions/vinyl';
-import { MuiThemeProvider, Paper } from 'material-ui';
+import { MuiThemeProvider, Paper, RaisedButton, Chip } from 'material-ui';
 
 export class Vinyl extends Component {
     constructor() {
@@ -12,7 +12,7 @@ export class Vinyl extends Component {
     onClick(data) {
         this.props.dispatch(
             actions.saveVinyl(data.vinylRecord),
-            alert('Vinyl Saved To Collection!')
+            alert(data.vinylRecord.title + ' Saved To Collection!')
         )
     }
     render() {
@@ -20,16 +20,16 @@ export class Vinyl extends Component {
             let vinylRecords = this.props.vinylRecords.map(function(vinylRecord) {
                 return <li key={vinylRecord.id}>
                     <a href={'https://www.discogs.com/' + vinylRecord.uri} target='_blank'><img src={vinylRecord.thumb} /></a>
-                    {vinylRecord.title} {vinylRecord.country} {vinylRecord.year} {vinylRecord.format[0]}
-                    <button type='submit' onClick={() => this.onClick({vinylRecord})}>Save</button>
+                    <Chip style={{margin: '8px auto'}} backgroundColor={'#C8E6C9'}><a href={'https://www.discogs.com/' + vinylRecord.uri} target='_blank'>{vinylRecord.title} {vinylRecord.country} {vinylRecord.year} {vinylRecord.format[0]}</a></Chip>
+                    <RaisedButton backgroundColor='#FF9800' labelColor='#FFFFFF' label='Save Vinyl' onClick={() => this.onClick({vinylRecord})} />
                 </li>
             }, this);
             return(
                 <MuiThemeProvider>
-                    <Paper>
-                        <div className='vinylList'>
-                            <h2>Artist Vinyl Releases</h2>
-                            <ul>
+                    <Paper className='paper'>
+                        <div>
+                            <p className='vinylTitle' style={{fontWeight: 'lighter'}}>Artist Vinyl Releases</p>
+                            <ul className='vinylList'>
                                 {vinylRecords}
                             </ul>
                         </div>
