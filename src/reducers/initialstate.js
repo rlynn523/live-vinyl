@@ -1,5 +1,4 @@
 export default {
-    username: '',
     savedVinyl: null,
     savedTours: null,
     vinyl: null,
