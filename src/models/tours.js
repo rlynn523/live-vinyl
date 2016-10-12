@@ -2,10 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var TourSchema = new Schema ({
-    title: {
-        type: String,
-        unique: true
-    },
+    title: String,
     date: {
         type: String,
         unique: true
@@ -14,6 +11,9 @@ var TourSchema = new Schema ({
         type: String,
         unique: true
     },
+    userId: {
+        type: String
+    }
 });
 
 var Tour = mongoose.model('Tour', TourSchema);
