@@ -11,7 +11,7 @@ let createNewUser = function(username, password) {
 }
 let createUser = function(newUser, newUserPassword, username, password) {
     return function(dispatch) {
-        let url = '/users';
+        let url = 'https://murmuring-scrubland-56766.herokuapp.com/users';
         $.ajax({
             url: url,
             type: 'post',
@@ -22,7 +22,7 @@ let createUser = function(newUser, newUserPassword, username, password) {
             }),
             contentType: 'application/json',
         }).done(function(data){
-            window.location.href = '/#/sign-in';
+            window.location.href = 'https://murmuring-scrubland-56766.herokuapp.com/#/sign-in';
             if(data) {
                 dispatch(
                     createNewUser(username, password)

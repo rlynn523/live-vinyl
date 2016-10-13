@@ -9,7 +9,7 @@ let deleteUserVinyl = function(vinyl) {
 }
 let deleteVinyl = function(vinyl) {
     return function(dispatch) {
-        let url = '/vinyl/' + vinyl._id;
+        let url = 'https://murmuring-scrubland-56766.herokuapp.com/vinyl/' + vinyl._id;
         return fetch(url, { method: 'DELETE',
             headers: {
               'Accept': 'application/json',
@@ -47,7 +47,7 @@ let deleteUserTour = function(tour) {
 }
 let deleteTour = function(tour) {
     return function(dispatch) {
-        let url = '/tours/' + tour._id;
+        let url = 'https://murmuring-scrubland-56766.herokuapp.com/tours/' + tour._id;
         return fetch(url, { method: 'DELETE',
             headers: {
               'Accept': 'application/json',
