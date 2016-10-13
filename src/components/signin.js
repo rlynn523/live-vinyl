@@ -16,13 +16,11 @@ export class SignIn extends Component {
     render() {
         return(
             <MuiThemeProvider>
-                <div>
-                    <div className='signIn'>
-                        <p className='titleSignIn' style={{fontWeight: 'lighter'}}>Sign In</p>
-                        <input type='text' ref='userName' placeholder='Username'/>
-                        <input type='password' ref='userPassword' placeholder='Password'/>
-                        <RaisedButton className='signInButton' onClick={this.onClick} backgroundColor='#FF9800' labelColor='#FFFFFF' label='Sign In' />
-                    </div>
+                <div className='signIn'>
+                    <p className='titleSignIn' style={{fontWeight: 'lighter'}}>Sign In</p>
+                    <input type='text' ref='userName' placeholder='Username'/>
+                    <input type='password' ref='userPassword' placeholder='Password'/>
+                    <RaisedButton className='signInButton' onClick={this.onClick} backgroundColor='#FF9800' labelColor='#FFFFFF' label='Sign In' />
                 </div>
             </MuiThemeProvider>
         )
