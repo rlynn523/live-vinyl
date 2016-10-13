@@ -2,7 +2,7 @@ import React from 'react';
 import { Router, Route, Link, hashHistory, IndexRoute } from 'react-router';
 import { MuiThemeProvider, AppBar, RaisedButton, IconButton } from 'material-ui';
 import Landing from './components/landing';
-import CreateUser from './components/signup';
+import CreateUser from './components/createUser';
 import Search from './components/search';
 import Vinyl from './components/vinyl';
 import Music from './components/music';
