@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "start": "cd build && http-server",
+    "start": "node server.js",
     "all": "git add -A",
     "push": "git push origin mvp-staging",
     "db": "sudo mongod",
