@@ -16,13 +16,11 @@ export class CreateUser extends Component {
     render() {
         return(
             <MuiThemeProvider>
-                <div>
-                    <div className='createUser'>
-                        <p className='titleCreateUser' style={{fontWeight: 'lighter'}}>Create Log In</p>
-                        <input type='text' ref='newUser' placeholder='Username'/>
-                        <input type='password' ref='newUserPassword' placeholder='Password'/>
-                        <RaisedButton className='signInButton' onClick={this.onClick} backgroundColor='#FF9800' labelColor='#FFFFFF' label='Create' />
-                    </div>
+                <div className='createUser'>
+                    <p className='titleCreateUser' style={{fontWeight: 'lighter'}}>Create Log In</p>
+                    <input type='text' ref='newUser' placeholder='Username'/>
+                    <input type='password' ref='newUserPassword' placeholder='Password'/>
+                    <RaisedButton className='signInButton' onClick={this.onClick} backgroundColor='#FF9800' labelColor='#FFFFFF' label='Create' />
                 </div>
             </MuiThemeProvider>
         )
