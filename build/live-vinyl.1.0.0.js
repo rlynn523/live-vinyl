@@ -28577,13 +28577,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var middleware = [_reduxThunk2.default];
-	
-	var enhancers = (0, _redux.compose)(_redux.applyMiddleware.apply(undefined, middleware), window.devToolsExtension ? window.devToolsExtension() : function (f) {
-	    return f;
-	});
-	
-	var store = (0, _redux.createStore)(_index2.default, {}, enhancers);
+	var store = (0, _redux.createStore)(_index2.default, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 	
 	module.exports = store;
 
@@ -29430,20 +29424,18 @@
 	};
 	var fetchTour = function fetchTour(userSearch, tour) {
 	    return function (dispatch) {
-	        var url = 'http://api.bandsintown.com/artists/' + userSearch + '/events.json?api_version=2.0&app_id=VINYL_COLLECTION';
-	        return (0, _isomorphicFetch2.default)(url).then(function (response) {
-	            if (response.status < 200 || response.status >= 300) {
-	                var error = new Error(response.statusText);
-	                error.response = response;
-	                throw error;
-	            }
-	            return response.json();
-	        }).then(function (data) {
+	        var url = 'https://api.bandsintown.com/artists/' + userSearch + '/events.json?api_version=2.0&app_id=VINYL_COLLECTION';
+	        $.ajax({
+	            url: url,
+	            type: 'GET',
+	            dataType: 'jsonp',
+	            contentType: 'application/json'
+	        }).done(function (data) {
 	            if (data) {
 	                var _tour = data;
 	                dispatch(fetchTourDates(_tour));
 	            }
-	        }).catch(function (error) {
+	        }).fail(function (error) {
 	            return dispatch(console.log(error));
 	        });
 	    };
@@ -29703,9 +29695,9 @@
 	
 	var _landing2 = _interopRequireDefault(_landing);
 	
-	var _signup = __webpack_require__(633);
+	var _createUser = __webpack_require__(633);
 	
-	var _signup2 = _interopRequireDefault(_signup);
+	var _createUser2 = _interopRequireDefault(_createUser);
 	
 	var _search = __webpack_require__(634);
 	
@@ -29799,7 +29791,7 @@
 	    _react2.default.createElement(
 	        _reactRouter.Route,
 	        { path: '/create-user', component: App },
-	        _react2.default.createElement(_reactRouter.IndexRoute, { component: _signup2.default })
+	        _react2.default.createElement(_reactRouter.IndexRoute, { component: _createUser2.default })
 	    ),
 	    _react2.default.createElement(
 	        _reactRouter.Route,
@@ -66521,7 +66513,7 @@
 	                null,
 	                _react2.default.createElement(
 	                    'div',
-	                    null,
+	                    { className: 'landingMain' },
 	                    _react2.default.createElement(
 	                        'p',
 	                        { className: 'titleMain', style: { fontWeight: 'lighter' } },
@@ -66534,11 +66526,11 @@
 	                    ),
 	                    _react2.default.createElement(
 	                        'div',
-	                        null,
+	                        { className: 'landingChips' },
 	                        _react2.default.createElement(
 	                            _materialUi.Chip,
 	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
-	                            'Get Current Tour Dates & Save Tour Dates To Your Profile'
+	                            'Get Related Artists'
 	                        ),
 	                        _react2.default.createElement(
 	                            _materialUi.Chip,
@@ -66548,12 +66540,17 @@
 	                        _react2.default.createElement(
 	                            _materialUi.Chip,
 	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
-	                            'Get Vinyl Releases From Artist & Add Them To Your Collection'
+	                            'Get Current Tour Dates'
 	                        ),
 	                        _react2.default.createElement(
 	                            _materialUi.Chip,
 	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
-	                            'Get Related Artists'
+	                            'Get Vinyl Releases From Artist'
+	                        ),
+	                        _react2.default.createElement(
+	                            _materialUi.Chip,
+	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
+	                            'Save Tours & Vinyl To Your Profile'
 	                        )
 	                    ),
 	                    _react2.default.createElement(
@@ -66711,19 +66708,15 @@
 	                null,
 	                _react2.default.createElement(
 	                    'div',
-	                    null,
+	                    { className: 'createUser' },
 	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'createUser' },
-	                        _react2.default.createElement(
-	                            'p',
-	                            { className: 'titleCreateUser', style: { fontWeight: 'lighter' } },
-	                            'Create Log In'
-	                        ),
-	                        _react2.default.createElement('input', { type: 'text', ref: 'newUser', placeholder: 'Username' }),
-	                        _react2.default.createElement('input', { type: 'password', ref: 'newUserPassword', placeholder: 'Password' }),
-	                        _react2.default.createElement(_materialUi.RaisedButton, { className: 'signInButton', onClick: this.onClick, backgroundColor: '#FF9800', labelColor: '#FFFFFF', label: 'Create' })
-	                    )
+	                        'p',
+	                        { className: 'titleCreateUser', style: { fontWeight: 'lighter' } },
+	                        'Create Log In'
+	                    ),
+	                    _react2.default.createElement('input', { type: 'text', ref: 'newUser', placeholder: 'Username' }),
+	                    _react2.default.createElement('input', { type: 'password', ref: 'newUserPassword', placeholder: 'Password' }),
+	                    _react2.default.createElement(_materialUi.RaisedButton, { className: 'signInButton', onClick: this.onClick, backgroundColor: '#FF9800', labelColor: '#FFFFFF', label: 'Create' })
 	                )
 	            );
 	        }
@@ -66798,10 +66791,14 @@
 	    _createClass(Search, [{
 	        key: 'onClick',
 	        value: function onClick() {
-	            this.props.dispatch(action1.fetchMusic(this.refs.userSearch.value));
-	            this.props.dispatch(action2.fetchVinyl(this.refs.userSearch.value));
-	            this.props.dispatch(action3.fetchTour(this.refs.userSearch.value));
-	            this.refs.userSearch.value = '';
+	            if (this.refs.userSearch.value !== '') {
+	                this.props.dispatch(action1.fetchMusic(this.refs.userSearch.value));
+	                this.props.dispatch(action2.fetchVinyl(this.refs.userSearch.value));
+	                this.props.dispatch(action3.fetchTour(this.refs.userSearch.value));
+	                this.refs.userSearch.value = '';
+	            } else {
+	                alert('Enter An Artist!');
+	            }
 	        }
 	    }, {
 	        key: 'render',
@@ -66912,7 +66909,7 @@
 	                                'a',
 	                                { href: 'https://www.discogs.com/' + vinylRecord.uri, target: '_blank' },
 	                                vinylRecord.title,
-	                                ' ',
+	                                _react2.default.createElement('br', null),
 	                                vinylRecord.country,
 	                                ' ',
 	                                vinylRecord.year,
@@ -68156,19 +68153,15 @@
 	                null,
 	                _react2.default.createElement(
 	                    'div',
-	                    null,
+	                    { className: 'signIn' },
 	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'signIn' },
-	                        _react2.default.createElement(
-	                            'p',
-	                            { className: 'titleSignIn', style: { fontWeight: 'lighter' } },
-	                            'Sign In'
-	                        ),
-	                        _react2.default.createElement('input', { type: 'text', ref: 'userName', placeholder: 'Username' }),
-	                        _react2.default.createElement('input', { type: 'password', ref: 'userPassword', placeholder: 'Password' }),
-	                        _react2.default.createElement(_materialUi.RaisedButton, { className: 'signInButton', onClick: this.onClick, backgroundColor: '#FF9800', labelColor: '#FFFFFF', label: 'Sign In' })
-	                    )
+	                        'p',
+	                        { className: 'titleSignIn', style: { fontWeight: 'lighter' } },
+	                        'Sign In'
+	                    ),
+	                    _react2.default.createElement('input', { type: 'text', ref: 'userName', placeholder: 'Username' }),
+	                    _react2.default.createElement('input', { type: 'password', ref: 'userPassword', placeholder: 'Password' }),
+	                    _react2.default.createElement(_materialUi.RaisedButton, { className: 'signInButton', onClick: this.onClick, backgroundColor: '#FF9800', labelColor: '#FFFFFF', label: 'Sign In' })
 	                )
 	            );
 	        }
@@ -68561,7 +68554,9 @@
 	                        _react2.default.createElement(
 	                            _materialUi.Chip,
 	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
-	                            savedTour.title
+	                            savedTour.title,
+	                            _react2.default.createElement('br', null),
+	                            savedTour.date
 	                        ),
 	                        _react2.default.createElement(_materialUi.RaisedButton, { className: 'deleteButton', label: 'Delete Tour Date', backgroundColor: '#FF9800', labelColor: '#FFFFFF', onClick: function onClick() {
 	                                return _this2.onClick({ savedTour: savedTour });

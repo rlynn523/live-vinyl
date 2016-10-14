@@ -109,4 +109,25 @@ a:link {
 a:hover {
   color: #FFFFFF;
 }
+@media only screen and (max-width: 750px) {
+  .paperSaved,
+  .paper {
+    display: block;
+    width: 75%;
+    margin: 2em auto;
+  }
+  input {
+    margin: 0 1em;
+  }
+}
+@media only screen and (max-width: 750px) {
+  input::-webkit-input-placeholder {
+    font-size: 0.75em;
+  }
+}
+@media only screen and (max-width: 450px) {
+  img {
+    width: 80%;
+  }
+}
 /*# sourceMappingURL=live-vinyl.1.0.0.css.map */
