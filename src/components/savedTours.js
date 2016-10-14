@@ -24,9 +24,10 @@ export class SavedTours extends Component {
         )
     }
     render() {
-        if(this.props.savedTours !== null){
-            let savedTours = this.props.savedTours.tour.map(function(savedTour){
-                    return <li key={savedTour._id}><Chip style={{margin: '5px auto'}} backgroundColor={'#C8E6C9'}>{savedTour.title}</Chip>
+        if(this.props.savedTours !== null) {
+            let savedTours = this.props.savedTours.tour.map(function(savedTour) {
+                console.log(this.props.savedTours);
+                    return <li key={savedTour._id}><Chip style={{margin: '5px auto'}} backgroundColor={'#C8E6C9'}>{savedTour.title}<br></br>{savedTour.date}</Chip>
                     <RaisedButton className='deleteButton' label='Delete Tour Date' backgroundColor='#FF9800' labelColor='#FFFFFF' onClick={() => this.onClick({savedTour})} />
                 </li>
             },this);
