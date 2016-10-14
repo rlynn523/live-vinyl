@@ -10,7 +10,7 @@ var config = require('./config.js');
 var bcrypt = require('bcryptjs');
 var passport = require('passport') , LocalStrategy = require('passport-local').Strategy;
 
-mongoose.connect('mongodb://localhost/music');
+mongoose.connect(config.DATABASE_URL);
 
 app.use(express.static('build'));
 app.use(bodyParser.json());
@@ -268,6 +268,6 @@ app.get('/breeds', isLoggedIn, function(req, res) {
     });
 });
 
-app.listen(process.env.PORT || 8080, process.env.IP);
+app.listen(process.env.PORT || 8080);
 
 module.exports.app = app;
