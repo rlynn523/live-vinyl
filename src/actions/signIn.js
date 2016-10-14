@@ -11,7 +11,7 @@ let userSignIn = function(username, password) {
 
 let signIn = function(userName, userPassword, username, password) {
     return function(dispatch) {
-        let url = 'https://murmuring-scrubland-56766.herokuapp.com/login';
+        let url = '/login';
         $.ajax({
             url: url,
             type: 'post',
@@ -22,7 +22,7 @@ let signIn = function(userName, userPassword, username, password) {
             }),
             contentType: 'application/json',
         }).done(function(data){
-            window.location.href = 'https://murmuring-scrubland-56766.herokuapp.com/#/search';
+            window.location.href = '/#/search';
             if(data) {
                 dispatch(
                     userSignIn(username, password)
@@ -47,7 +47,7 @@ let logout = function() {
             url: url,
             type: 'get',
         }).done(function(data){
-            window.location.href = 'https://murmuring-scrubland-56766.herokuapp.com/';
+            window.location.href = '/';
             dispatch(
                 userLogOut()
             )

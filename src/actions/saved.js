@@ -9,7 +9,7 @@ let getSavedVinyl = function(vinyl) {
 }
 let savedVinyl = function(vinyl) {
     return function(dispatch) {
-        let url = 'https://murmuring-scrubland-56766.herokuapp.com/vinyl';
+        let url = '/vinyl';
         $.ajax({
             url: url,
             type: 'GET',
@@ -40,7 +40,7 @@ let getSavedTours = function(tour) {
 }
 let savedTours = function(tour) {
     return function(dispatch) {
-        let url = 'https://murmuring-scrubland-56766.herokuapp.com/tours';
+        let url = '/tours';
         $.ajax({
             url: url,
             type: 'GET',

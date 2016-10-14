@@ -44,7 +44,7 @@ let saveArtistVinyl = function(vinyl) {
 }
 let saveVinyl = function(vinyl) {
     return function(dispatch) {
-        let url = 'https://murmuring-scrubland-56766.herokuapp.com/vinyl';
+        let url = '/vinyl';
         $.ajax({
             url: url,
             type: 'post',

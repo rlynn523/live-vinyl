@@ -43,7 +43,7 @@ let saveTourDate = function(tour) {
 
 let saveTour = function(tour) {
     return function(dispatch) {
-        let url = 'https://murmuring-scrubland-56766.herokuapp.com/tours';
+        let url = '/tours';
         $.ajax({
             url: url,
             type: 'post',
