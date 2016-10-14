@@ -6,7 +6,7 @@ import store from '../src/store';
 import { SignIn } from '../src/components/signin';
 
 describe('SignIn component', function() {
-    it('Should Render Username And Password Input Fields, And A Sign In Button', function(){
+    it('Should Render Username And Password Input Fields, And A Sign In Button', function() {
         let renderer = TestUtils.createRenderer();
         renderer.render(<SignIn />);
         let result = renderer.getRenderOutput();

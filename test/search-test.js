@@ -5,7 +5,7 @@ should();
 import store from '../src/store';
 import { Search } from '../src/components/search';
 describe('Search component', function() {
-    it('Should Render Input Field and Search Button', function(){
+    it('Should Render Input Field and Search Button', function() {
         let renderer = TestUtils.createRenderer();
         renderer.render(<Search />);
         let result = renderer.getRenderOutput();
