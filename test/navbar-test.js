@@ -6,7 +6,7 @@ import store from '../src/store';
 import { NavBar } from '../src/components/navbar';
 
 describe('NavBar component', function() {
-    it('Should Render NavBar And Icons With Different Routes', function(){
+    it('Should Render NavBar And Icons With Different Routes', function() {
         let renderer = TestUtils.createRenderer();
         renderer.render(<NavBar />);
         let result = renderer.getRenderOutput();
