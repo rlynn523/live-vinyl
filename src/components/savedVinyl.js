@@ -24,8 +24,8 @@ export class SavedVinyl extends Component {
         )
     }
     render() {
-        if(this.props.savedVinyls !== null){
-            let savedVinyls = this.props.savedVinyls.vinyl.map(function(savedVinyl){
+        if(this.props.savedVinyls !== null) {
+            let savedVinyls = this.props.savedVinyls.vinyl.map(function(savedVinyl) {
                 return <li key={savedVinyl._id}><Chip style={{margin: '5px auto'}} backgroundColor={'#C8E6C9'}>{savedVinyl.title} {savedVinyl.country} {savedVinyl.year}</Chip>
                 <RaisedButton className='deleteButton' backgroundColor='#FF9800' labelColor='#FFFFFF' label='Delete Vinyl' onClick={() => this.onClick({savedVinyl})} />
                 </li>

@@ -5,8 +5,8 @@ import { MuiThemeProvider, Paper, Chip } from 'material-ui';
 
 export class Music extends Component {
     render() {
-        if(this.props.artistAlbums !== null){
-            let artistAlbums = this.props.artistAlbums.music.items.map(function(artistAlbum){
+        if(this.props.artistAlbums !== null) {
+            let artistAlbums = this.props.artistAlbums.music.items.map(function(artistAlbum) {
                 return <li key={artistAlbum.id}><a href={artistAlbum.external_urls.spotify} target='_blank'><img src={artistAlbum.images[1].url} /></a>
                     <br></br>
                     <Chip className='albumChip' backgroundColor={'#C8E6C9'} style={{margin: '8px auto'}}><a href={artistAlbum.external_urls.spotify} target='_blank'>{artistAlbum.name}</a></Chip>

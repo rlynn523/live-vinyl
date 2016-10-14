@@ -6,7 +6,7 @@ import { MuiThemeProvider, Paper, Chip } from 'material-ui';
 export class Related extends Component {
     render() {
         if(this.props.relatedArtists !== null) {
-            let relatedArtists = this.props.relatedArtists.artists.map(function(relatedArtist){
+            let relatedArtists = this.props.relatedArtists.artists.map(function(relatedArtist) {
                 return <li key={relatedArtist.id}><Chip style={{margin: '5px auto'}} backgroundColor={'#C8E6C9'}>{relatedArtist.name}</Chip></li>
             });
             return(
