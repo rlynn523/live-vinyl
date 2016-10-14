@@ -10,7 +10,7 @@ let fetchTourDates = function(tour) {
 let fetchTour = function(userSearch, tour) {
     return function(dispatch) {
         let url = 'https://api.bandsintown.com/artists/'+userSearch+'/events.json?api_version=2.0&app_id=VINYL_COLLECTION';
-        return fetch(url).then(function(response) {
+        return fetch(url, {mode: 'cors'}).then(function(response) {
             if (response.status < 200 || response.status >= 300) {
                var error = new Error(response.statusText)
                error.response = response
