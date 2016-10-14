@@ -29425,17 +29425,19 @@
 	var fetchTour = function fetchTour(userSearch, tour) {
 	    return function (dispatch) {
 	        var url = 'https://api.bandsintown.com/artists/' + userSearch + '/events.json?api_version=2.0&app_id=VINYL_COLLECTION';
-	        $.ajax({
-	            url: url,
-	            type: 'GET',
-	            dataType: 'jsonp',
-	            contentType: 'application/json'
-	        }).done(function (data) {
+	        return (0, _isomorphicFetch2.default)(url, { mode: 'cors' }).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response.json();
+	        }).then(function (data) {
 	            if (data) {
 	                var _tour = data;
 	                dispatch(fetchTourDates(_tour));
 	            }
-	        }).fail(function (error) {
+	        }).catch(function (error) {
 	            return dispatch(console.log(error));
 	        });
 	    };
@@ -66520,40 +66522,6 @@
 	                        'Welcome To Live Vinyl'
 	                    ),
 	                    _react2.default.createElement(
-	                        'p',
-	                        { className: 'titleSecond' },
-	                        'Search An Artist You Love'
-	                    ),
-	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'landingChips' },
-	                        _react2.default.createElement(
-	                            _materialUi.Chip,
-	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
-	                            'Get Related Artists'
-	                        ),
-	                        _react2.default.createElement(
-	                            _materialUi.Chip,
-	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
-	                            'Get Available Albums On Spotify'
-	                        ),
-	                        _react2.default.createElement(
-	                            _materialUi.Chip,
-	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
-	                            'Get Current Tour Dates'
-	                        ),
-	                        _react2.default.createElement(
-	                            _materialUi.Chip,
-	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
-	                            'Get Vinyl Releases From Artist'
-	                        ),
-	                        _react2.default.createElement(
-	                            _materialUi.Chip,
-	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
-	                            'Save Tours & Vinyl To Your Profile'
-	                        )
-	                    ),
-	                    _react2.default.createElement(
 	                        'div',
 	                        { className: 'landingButtons' },
 	                        _react2.default.createElement(
@@ -66570,6 +66538,35 @@
 	                            _reactRouter.Link,
 	                            { to: '/search' },
 	                            _react2.default.createElement(_materialUi.RaisedButton, { className: 'searchButtonLanding', backgroundColor: '#FF9800', labelColor: '#FFFFFF', label: 'Search' })
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'landingChips' },
+	                        _react2.default.createElement(
+	                            _materialUi.Chip,
+	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
+	                            'Get Related Artists'
+	                        ),
+	                        _react2.default.createElement(
+	                            _materialUi.Chip,
+	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
+	                            'Get Current Tour Dates'
+	                        ),
+	                        _react2.default.createElement(
+	                            _materialUi.Chip,
+	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
+	                            'Get Vinyl Releases From Artist'
+	                        ),
+	                        _react2.default.createElement(
+	                            _materialUi.Chip,
+	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
+	                            'Get Available Albums On Spotify'
+	                        ),
+	                        _react2.default.createElement(
+	                            _materialUi.Chip,
+	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
+	                            'Save Tours & Vinyl To Your Profile'
 	                        )
 	                    )
 	                )
@@ -68418,24 +68415,17 @@
 	var deleteVinyl = function deleteVinyl(vinyl) {
 	    return function (dispatch) {
 	        var url = '/vinyl/' + vinyl._id;
-	        return (0, _isomorphicFetch2.default)(url, { method: 'DELETE',
-	            headers: {
-	                'Accept': 'application/json',
-	                'Content-Type': 'application/json'
-	            }
-	        }).then(function (response) {
-	            if (response.status < 200 || response.status >= 300) {
-	                var error = new Error(response.statusText);
-	                error.response = response;
-	                throw error;
-	            }
-	            return response.json();
-	        }).then(function (data) {
+	        $.ajax({
+	            url: url,
+	            type: 'DELETE',
+	            dataType: 'json',
+	            contentType: 'application/json'
+	        }).done(function (data) {
 	            var vinyl = data;
 	            if (data) {
 	                dispatch(deleteUserVinyl(vinyl));
 	            }
-	        }).catch(function (error) {
+	        }).fail(function (error) {
 	            return dispatch(console.log(error));
 	        });
 	    };
@@ -68451,24 +68441,17 @@
 	var deleteTour = function deleteTour(tour) {
 	    return function (dispatch) {
 	        var url = '/tours/' + tour._id;
-	        return (0, _isomorphicFetch2.default)(url, { method: 'DELETE',
-	            headers: {
-	                'Accept': 'application/json',
-	                'Content-Type': 'application/json'
-	            }
-	        }).then(function (response) {
-	            if (response.status < 200 || response.status >= 300) {
-	                var error = new Error(response.statusText);
-	                error.response = response;
-	                throw error;
-	            }
-	            return response.json();
-	        }).then(function (data) {
+	        $.ajax({
+	            url: url,
+	            type: 'DELETE',
+	            dataType: 'json',
+	            contentType: 'application/json'
+	        }).done(function (data) {
 	            var tour = data;
 	            if (data) {
 	                dispatch(deleteUserTour(tour));
 	            }
-	        }).catch(function (error) {
+	        }).fail(function (error) {
 	            return dispatch(console.log(error));
 	        });
 	    };

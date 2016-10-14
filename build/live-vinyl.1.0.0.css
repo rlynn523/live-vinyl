@@ -18,6 +18,9 @@ html {
 .landingButtons {
   text-align: center;
 }
+.landingChips {
+  margin: 3em 0;
+}
 .signUpButton,
 .signInButton,
 .searchButtonLanding {
@@ -128,6 +131,12 @@ a:hover {
 @media only screen and (max-width: 450px) {
   img {
     width: 80%;
+  }
+  .signInButton,
+  .signUpButton,
+  .searchButtonLanding {
+    width: 65%;
+    margin: 1.5em;
   }
 }
 /*# sourceMappingURL=live-vinyl.1.0.0.css.map */
