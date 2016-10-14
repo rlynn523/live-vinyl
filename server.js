@@ -195,7 +195,7 @@ app.post('/tours', isLoggedIn, function(req, res) {
         });
     }
 })
-app.delete('/tours/:id', function(req, res) {
+app.delete('/tours/:id', isLoggedIn, function(req, res) {
     Tour.remove({
             _id: req.params.id
         },
@@ -223,7 +223,7 @@ app.get('/vinyl', isLoggedIn, function(req, res) {
         return res.json(vinyl);
     });
 });
-app.post('/vinyl', function(req, res) {
+app.post('/vinyl', isLoggedIn, function(req, res) {
     if(req.body) {
         Vinyl.create({
                 title: req.body.title,
@@ -244,7 +244,7 @@ app.post('/vinyl', function(req, res) {
         });
     }
 });
-app.delete('/vinyl/:id', function(req, res) {
+app.delete('/vinyl/:id', isLoggedIn, function(req, res) {
     Vinyl.remove({
             _id: req.params.id
         },
@@ -256,16 +256,6 @@ app.delete('/vinyl/:id', function(req, res) {
             }
             return res.status(200).json(vinyl);
         });
-});
-app.get('/breeds', isLoggedIn, function(req, res) {
-    Breed.find({userId: req.user._id}, function(err, breed) {
-        if (err) {
-            return res.status(500).json({
-                message: 'Internal Server Error'
-            });
-        }
-        return res.json(breed);
-    });
 });
 
 app.listen(process.env.PORT || 8080);
