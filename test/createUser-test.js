@@ -6,7 +6,7 @@ import store from '../src/store';
 import { CreateUser } from '../src/components/createUser';
 
 describe('CreateUser component', function() {
-    it('Should Render Input Fields To Create Username And Password, And Create Button', function(){
+    it('Should Render Input Fields To Create Username And Password, And Create Button', function() {
         let renderer = TestUtils.createRenderer();
         renderer.render(<CreateUser />);
         let result = renderer.getRenderOutput();

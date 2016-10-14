@@ -6,7 +6,7 @@ import store from '../src/store';
 import Landing from '../src/components/landing';
 
 describe('Landing component', function() {
-    it('Should Render App Title, Chips, and Buttons', function(){
+    it('Should Render App Title, Chips, and Buttons', function() {
         let renderer = TestUtils.createRenderer();
         renderer.render(<Landing />);
         let result = renderer.getRenderOutput();
