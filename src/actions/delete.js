@@ -10,27 +10,19 @@ let deleteUserVinyl = function(vinyl) {
 let deleteVinyl = function(vinyl) {
     return function(dispatch) {
         let url = '/vinyl/' + vinyl._id;
-        return fetch(url, { method: 'DELETE',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            }).then(function(response) {
-            if (response.status < 200 || response.status >= 300) {
-               var error = new Error(response.statusText)
-               error.response = response
-               throw error;
-           }
-           return response.json();
-       }).then(function(data) {
+        $.ajax({
+            url: url,
+            type: 'DELETE',
+            dataType: 'json',
+            contentType: 'application/json',
+        }).done(function(data) {
            let vinyl = data;
             if(data) {
                 dispatch(
                     deleteUserVinyl(vinyl)
                 )
             }
-        })
-        .catch(function(error) {
+        }).fail(function(error) {
             return dispatch(
                 console.log(error)
             )
@@ -48,27 +40,19 @@ let deleteUserTour = function(tour) {
 let deleteTour = function(tour) {
     return function(dispatch) {
         let url = '/tours/' + tour._id;
-        return fetch(url, { method: 'DELETE',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            }).then(function(response) {
-            if (response.status < 200 || response.status >= 300) {
-               var error = new Error(response.statusText)
-               error.response = response
-               throw error;
-           }
-           return response.json();
-       }).then(function(data) {
+        $.ajax({
+            url: url,
+            type: 'DELETE',
+            dataType: 'json',
+            contentType: 'application/json',
+        }).done(function(data) {
            let tour = data;
             if(data) {
                 dispatch(
                     deleteUserTour(tour)
                 )
             }
-        })
-        .catch(function(error) {
+        }).fail(function(error) {
             return dispatch(
                 console.log(error)
             )
