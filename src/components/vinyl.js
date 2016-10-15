@@ -20,7 +20,7 @@ export class Vinyl extends Component {
             let vinylRecords = this.props.vinylRecords.map(function(vinylRecord) {
                 return <li key={vinylRecord.id}>
                     <a href={'https://www.discogs.com/' + vinylRecord.uri} target='_blank'><img src={vinylRecord.thumb} /></a>
-                    <Chip style={{margin: '8px auto'}} backgroundColor={'#C8E6C9'}><a href={'https://www.discogs.com/' + vinylRecord.uri} target='_blank'>{vinylRecord.title} {vinylRecord.country} {vinylRecord.year} {vinylRecord.format[0]}</a></Chip>
+                    <Chip style={{margin: '8px auto'}} backgroundColor={'#C8E6C9'}><a href={'https://www.discogs.com/' + vinylRecord.uri} target='_blank'>{vinylRecord.title}<br></br>{vinylRecord.country} {vinylRecord.year} {vinylRecord.format[0]}</a></Chip>
                     <RaisedButton backgroundColor='#FF9800' labelColor='#FFFFFF' label='Save Vinyl' onClick={() => this.onClick({vinylRecord})} />
                 </li>
             }, this);
