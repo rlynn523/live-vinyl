@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# vinyl-collection
-=======
 # Live Vinyl
 
 ![Build Status](https://travis-ci.org/rlynn523/live-vinyl.svg?branch=mvp-staging)
@@ -16,4 +13,4 @@ https://murmuring-scrubland-56766.herokuapp.com/#/?_k=zog66j
 The purpose of this app is to allow a user to search any artist that they love, and then show all the current tour dates,albums on spotify, vinyl releases, and related artists. Users can create a log in and save vinyl and tour dates to their profile
 
 ##Use
->>>>>>> 6af55d49c055760512d0a655a270c8be7b4c8f5c
+
