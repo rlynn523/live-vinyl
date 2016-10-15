@@ -13,7 +13,7 @@ let fetchTour = function(userSearch, tour) {
         $.ajax({
                url: url,
                type: 'GET',
-               dataType: 'json',
+               dataType: 'jsonp',
                contentType: 'application/json',
            }).done(function(data) {
                 if(data) {
