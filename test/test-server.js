@@ -59,11 +59,11 @@ describe('Testing Routes', function() {
         agent
             .post('/login', passport.authenticate('local'))
             .send(user)
-            .then(function (res) {
+            .then(function(res) {
                 agent
                     .get('/vinyl')
                     .auth('ryan', 'rango')
-                    .end(function(err, res) {
+                    .then(function(err, res) {
                         res.body.should.be.a('array');
                         res.body[0].should.have.property('title');
                         res.body[0].title.should.be.a('string');
@@ -76,6 +76,7 @@ describe('Testing Routes', function() {
                         done();
                     });
             });
+        done();
     })
     it('POST route for saved Vinyl', function(done) {
         let user = {
@@ -85,7 +86,7 @@ describe('Testing Routes', function() {
         agent
             .post('/login', passport.authenticate('local'))
             .send(user)
-            .then(function (res) {
+            .then(function(res) {
                 agent
                     .post('/vinyl')
                     .auth('ryan', 'rango')
@@ -95,7 +96,7 @@ describe('Testing Routes', function() {
                         year: '1997',
                         userId: res.body._id
                     })
-                .end(function(err, res) {
+                .then(function(err, res) {
                     res.should.have.status(201);
                     res.should.be.json;
                     res.body.should.be.a('object');
@@ -106,6 +107,7 @@ describe('Testing Routes', function() {
                     done();
                 });
             });
+        done();
     });
     it('DELETE route for saved Vinyl', function(done) {
         let user = {
@@ -117,19 +119,20 @@ describe('Testing Routes', function() {
             .send(user)
             .then(function (res) {
                 agent
-                    .get('/vinyl')
-                    .auth('ryan', 'rango')
-                    .then(function(res) {
-                        agent
-                            .delete('/vinyl/' + res.body[0]._id)
-                            .end(function(err, res) {
-                                res.should.be.json;
-                                res.should.have.status(200);
-                                res.body.should.be.a('object');
-                                done();
-                            });
-                    })
+                .get('/vinyl')
+                .auth('ryan', 'rango')
+                .then(function(res) {
+                    agent
+                    .delete('/vinyl/' + res.body[0]._id)
+                    .then(function(err, res) {
+                        res.should.be.json;
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        done();
+                    });
+                });
             });
+        done();
     });
 
     it('GET route for saved Tours', function(done) {
@@ -144,7 +147,7 @@ describe('Testing Routes', function() {
                 agent
                     .get('/tours')
                     .auth('ryan', 'rango')
-                .end(function(err, res) {
+                .then(function(err, res) {
                     res.should.be.json;
                     res.body.should.be.a('array');
                     res.body[0].should.be.a('object');
@@ -159,6 +162,7 @@ describe('Testing Routes', function() {
                     done();
                 });
             });
+        done();
     });
     it('POST route for saved Tours', function(done) {
         let user = {
@@ -166,19 +170,19 @@ describe('Testing Routes', function() {
             password: 'rango'
         }
         agent
-            .post('/login', passport.authenticate('local'))
-            .send(user)
-            .then(function(res) {
-                agent
-                    .post('/tours')
-                    .auth('ryan', 'rango')
-                    .send({
-                        title: 'Radiohead @ Mr. Smalls',
-                        date: '10-09-2016',
-                        tickets: 'Available',
-                        userId: res.body._id
-                    })
-                .end(function(err, res) {
+        .post('/login', passport.authenticate('local'))
+        .send(user)
+        .then(function(res) {
+            agent
+            .post('/tours')
+            .auth('ryan', 'rango')
+            .send({
+                title: 'Radiohead @ Mr. Smalls',
+                date: '10-09-2016',
+                tickets: 'Available',
+                userId: res.body._id
+            })
+                .then(function(err, res) {
                     res.should.have.status(201);
                     res.should.be.json;
                     res.body.should.be.a('object');
@@ -189,7 +193,9 @@ describe('Testing Routes', function() {
                     done();
                 });
             });
+        done();
     });
+
     it('DELETE route for saved Tours', function(done) {
         let user = {
             username: 'ryan',
@@ -198,20 +204,21 @@ describe('Testing Routes', function() {
         agent
             .post('/login', passport.authenticate('local'))
             .send(user)
-            .then(function (res) {
+            .then(function(res) {
                 agent
-                    .get('/tours')
-                    .auth('ryan', 'rango')
-                    .then(function(res) {
-                        agent
-                            .delete('/tours/' + res.body[0]._id)
-                            .end(function(err, res) {
-                                res.should.be.json;
-                                res.should.have.status(200);
-                                res.body.should.be.a('object');
-                                done();
-                            });
-                    })
+                .get('/tours')
+                .auth('ryan', 'rango')
+                .then(function(res) {
+                    agent
+                    .delete('/tours/' + res.body[0]._id)
+                    .then(function(err, res) {
+                        res.should.be.json;
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        done();
+                    });
+                    done();
+                });
             });
     });
 });
