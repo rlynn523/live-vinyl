@@ -52,6 +52,7 @@
     "less-plugin-clean-css": "^1.5.1",
     "mocha": "^3.1.0",
     "react-addons-test-utils": "^15.3.2",
+    "supertest": "^2.0.0",
     "webpack": "^1.13.2"
   },
   "dependencies": {
