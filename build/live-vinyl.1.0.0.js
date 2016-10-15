@@ -66486,6 +66486,10 @@
 	
 	var _materialUi = __webpack_require__(273);
 	
+	var _album = __webpack_require__(656);
+	
+	var _album2 = _interopRequireDefault(_album);
+	
 	var _signIn = __webpack_require__(632);
 	
 	var _signIn2 = _interopRequireDefault(_signIn);
@@ -66522,6 +66526,11 @@
 	                        'Welcome To Live Vinyl'
 	                    ),
 	                    _react2.default.createElement(
+	                        _materialUi.FontIcon,
+	                        { className: 'vinylIcon' },
+	                        _react2.default.createElement(_album2.default, { style: { width: '150px', height: '150px' } })
+	                    ),
+	                    _react2.default.createElement(
 	                        'div',
 	                        { className: 'landingButtons' },
 	                        _react2.default.createElement(
@@ -66542,30 +66551,20 @@
 	                    ),
 	                    _react2.default.createElement(
 	                        'div',
-	                        { className: 'landingChips' },
+	                        { className: 'landingAbout' },
 	                        _react2.default.createElement(
-	                            _materialUi.Chip,
-	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
-	                            'Get Related Artists'
+	                            'p',
+	                            { style: { fontWeight: 'lighter' } },
+	                            'Get Related Artists || Get Current Tour Dates'
 	                        ),
 	                        _react2.default.createElement(
-	                            _materialUi.Chip,
-	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
-	                            'Get Current Tour Dates'
+	                            'p',
+	                            { style: { fontWeight: 'lighter' } },
+	                            'Get Vinyl Releases From Artist || Get Available Albums On Spotify'
 	                        ),
 	                        _react2.default.createElement(
-	                            _materialUi.Chip,
-	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
-	                            'Get Vinyl Releases From Artist'
-	                        ),
-	                        _react2.default.createElement(
-	                            _materialUi.Chip,
-	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
-	                            'Get Available Albums On Spotify'
-	                        ),
-	                        _react2.default.createElement(
-	                            _materialUi.Chip,
-	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
+	                            'p',
+	                            { style: { fontWeight: 'lighter' } },
 	                            'Save Tours & Vinyl To Your Profile'
 	                        )
 	                    )
@@ -68481,6 +68480,8 @@
 	
 	var _reactRedux = __webpack_require__(172);
 	
+	var _reactRouter = __webpack_require__(195);
+	
 	var _saved = __webpack_require__(271);
 	
 	var action1 = _interopRequireWildcard(_saved);
@@ -68569,7 +68570,33 @@
 	                    )
 	                );
 	            } else {
-	                return _react2.default.createElement('p', null);
+	                return _react2.default.createElement(
+	                    _materialUi.MuiThemeProvider,
+	                    null,
+	                    _react2.default.createElement(
+	                        'div',
+	                        null,
+	                        _react2.default.createElement(
+	                            'p',
+	                            { className: 'noSavedData', style: { fontWeight: 'lighter' } },
+	                            'Please Sign Up or Sign In To Save Tours & Vinyl.'
+	                        ),
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'landingButtons' },
+	                            _react2.default.createElement(
+	                                _reactRouter.Link,
+	                                { to: '/sign-in' },
+	                                _react2.default.createElement(_materialUi.RaisedButton, { className: 'signInButton', backgroundColor: '#FF9800', labelColor: '#FFFFFF', label: 'Sign In' })
+	                            ),
+	                            _react2.default.createElement(
+	                                _reactRouter.Link,
+	                                { to: '/create-user' },
+	                                _react2.default.createElement(_materialUi.RaisedButton, { className: 'signUpButton', backgroundColor: '#FF9800', labelColor: '#FFFFFF', label: 'Create User' })
+	                            )
+	                        )
+	                    )
+	                );
 	            }
 	        }
 	    }]);
@@ -68854,6 +68881,43 @@
 	SocialPerson.muiName = 'SvgIcon';
 	
 	exports.default = SocialPerson;
+
+/***/ },
+/* 656 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _pure = __webpack_require__(303);
+	
+	var _pure2 = _interopRequireDefault(_pure);
+	
+	var _SvgIcon = __webpack_require__(312);
+	
+	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var AvAlbum = function AvAlbum(props) {
+	  return _react2.default.createElement(
+	    _SvgIcon2.default,
+	    props,
+	    _react2.default.createElement('path', { d: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 12 7.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5zm0-5.5c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z' })
+	  );
+	};
+	AvAlbum = (0, _pure2.default)(AvAlbum);
+	AvAlbum.displayName = 'AvAlbum';
+	AvAlbum.muiName = 'SvgIcon';
+	
+	exports.default = AvAlbum;
 
 /***/ }
 /******/ ]);

@@ -15,16 +15,21 @@ html {
   font-size: 2em;
   text-align: center;
 }
+.landingMain {
+  text-align: center;
+}
 .landingButtons {
   text-align: center;
 }
-.landingChips {
+.landingAbout {
   margin: 3em 0;
+  text-align: center;
 }
 .signUpButton,
 .signInButton,
 .searchButtonLanding {
-  margin: 2.5em;
+  margin: 2em;
+  display: block;
 }
 .searchTitle,
 .titleSignIn,
@@ -39,8 +44,9 @@ html {
 }
 input {
   height: 2.25em;
-  width: 25%;
-  margin-right: 5em;
+  width: 33%;
+  margin: 2em auto;
+  display: block;
 }
 .bandSearch {
   text-align: center;
@@ -71,6 +77,11 @@ ul {
   background-color: #4CAF50;
   color: #FFFFFF;
   margin: 0;
+}
+.noSavedData {
+  text-align: center;
+  font-size: 2.5em;
+  padding: 1em 0;
 }
 .savedToursList,
 .savedVinylList,
@@ -119,13 +130,15 @@ a:hover {
     width: 75%;
     margin: 2em auto;
   }
-  input {
-    margin: 0 1em;
-  }
 }
 @media only screen and (max-width: 750px) {
   input::-webkit-input-placeholder {
     font-size: 0.75em;
+  }
+}
+@media only screen and (max-width: 550px) {
+  .landingAbout {
+    font-size: 0.875em;
   }
 }
 @media only screen and (max-width: 450px) {
@@ -137,6 +150,14 @@ a:hover {
   .searchButtonLanding {
     width: 65%;
     margin: 1.5em;
+  }
+  .landingAbout {
+    font-size: 0.8em;
+  }
+}
+@media only screen and (max-width: 400px) {
+  .landingAbout {
+    font-size: 0.75em;
   }
 }
 /*# sourceMappingURL=live-vinyl.1.0.0.css.map */
