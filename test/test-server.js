@@ -217,8 +217,8 @@ describe('Testing Routes', function() {
                         res.body.should.be.a('object');
                         done();
                     });
-                    done();
                 });
             });
+        done();
     });
 });
