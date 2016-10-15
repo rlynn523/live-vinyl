@@ -197,7 +197,8 @@ app.post('/tours', isLoggedIn, function(req, res) {
 })
 app.delete('/tours/:id', isLoggedIn, function(req, res) {
     Tour.remove({
-            _id: req.params.id
+            _id: req.params.id,
+            userId: req.user._id
         },
         function(err, tour) {
             if (err) {
@@ -246,7 +247,8 @@ app.post('/vinyl', isLoggedIn, function(req, res) {
 });
 app.delete('/vinyl/:id', isLoggedIn, function(req, res) {
     Vinyl.remove({
-            _id: req.params.id
+            _id: req.params.id,
+            userId: req.user._id
         },
         function(err, vinyl) {
             if (err) {
