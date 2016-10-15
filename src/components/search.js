@@ -11,16 +11,20 @@ export class Search extends Component {
         this.onClick = this.onClick.bind(this);
     }
     onClick() {
-        this.props.dispatch(
-            action1.fetchMusic(this.refs.userSearch.value)
-        )
-        this.props.dispatch(
-            action2.fetchVinyl(this.refs.userSearch.value)
-        )
-        this.props.dispatch(
-            action3.fetchTour(this.refs.userSearch.value)
-        )
-        this.refs.userSearch.value = '';
+        if(this.refs.userSearch.value !== '') {
+            this.props.dispatch(
+                action1.fetchMusic(this.refs.userSearch.value)
+            )
+            this.props.dispatch(
+                action2.fetchVinyl(this.refs.userSearch.value)
+            )
+            this.props.dispatch(
+                action3.fetchTour(this.refs.userSearch.value)
+            )
+            this.refs.userSearch.value = '';
+        } else {
+            alert('Enter An Artist!')
+        }
     }
     render() {
         return(
