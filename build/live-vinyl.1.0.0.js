@@ -29424,20 +29424,17 @@
 	};
 	var fetchTour = function fetchTour(userSearch, tour) {
 	    return function (dispatch) {
-	        var url = 'https://api.bandsintown.com/artists/' + userSearch + '/events.json?api_version=2.0&app_id=VINYL_COLLECTION';
-	        return (0, _isomorphicFetch2.default)(url, { mode: 'cors' }).then(function (response) {
-	            if (response.status < 200 || response.status >= 300) {
-	                var error = new Error(response.statusText);
-	                error.response = response;
-	                throw error;
-	            }
-	            return response.json();
-	        }).then(function (data) {
+	        $.ajax({
+	            url: url,
+	            type: 'GET',
+	            dataType: 'json',
+	            contentType: 'application/json'
+	        }).done(function (data) {
 	            if (data) {
 	                var _tour = data;
 	                dispatch(fetchTourDates(_tour));
 	            }
-	        }).catch(function (error) {
+	        }).fail(function (error) {
 	            return dispatch(console.log(error));
 	        });
 	    };
@@ -29697,43 +29694,43 @@
 	
 	var _landing2 = _interopRequireDefault(_landing);
 	
-	var _createUser = __webpack_require__(633);
+	var _createUser = __webpack_require__(634);
 	
 	var _createUser2 = _interopRequireDefault(_createUser);
 	
-	var _search = __webpack_require__(634);
+	var _search = __webpack_require__(635);
 	
 	var _search2 = _interopRequireDefault(_search);
 	
-	var _vinyl = __webpack_require__(635);
+	var _vinyl = __webpack_require__(636);
 	
 	var _vinyl2 = _interopRequireDefault(_vinyl);
 	
-	var _music = __webpack_require__(638);
+	var _music = __webpack_require__(639);
 	
 	var _music2 = _interopRequireDefault(_music);
 	
-	var _tour = __webpack_require__(639);
+	var _tour = __webpack_require__(640);
 	
 	var _tour2 = _interopRequireDefault(_tour);
 	
-	var _signin = __webpack_require__(646);
+	var _signin = __webpack_require__(647);
 	
 	var _signin2 = _interopRequireDefault(_signin);
 	
-	var _related = __webpack_require__(647);
+	var _related = __webpack_require__(648);
 	
 	var _related2 = _interopRequireDefault(_related);
 	
-	var _savedVinyl = __webpack_require__(648);
+	var _savedVinyl = __webpack_require__(649);
 	
 	var _savedVinyl2 = _interopRequireDefault(_savedVinyl);
 	
-	var _savedTours = __webpack_require__(650);
+	var _savedTours = __webpack_require__(651);
 	
 	var _savedTours2 = _interopRequireDefault(_savedTours);
 	
-	var _navbar = __webpack_require__(651);
+	var _navbar = __webpack_require__(652);
 	
 	var _navbar2 = _interopRequireDefault(_navbar);
 	
@@ -66486,11 +66483,11 @@
 	
 	var _materialUi = __webpack_require__(273);
 	
-	var _album = __webpack_require__(656);
+	var _album = __webpack_require__(632);
 	
 	var _album2 = _interopRequireDefault(_album);
 	
-	var _signIn = __webpack_require__(632);
+	var _signIn = __webpack_require__(633);
 	
 	var _signIn2 = _interopRequireDefault(_signIn);
 	
@@ -66584,6 +66581,43 @@
 
 	'use strict';
 	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _pure = __webpack_require__(303);
+	
+	var _pure2 = _interopRequireDefault(_pure);
+	
+	var _SvgIcon = __webpack_require__(312);
+	
+	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var AvAlbum = function AvAlbum(props) {
+	  return _react2.default.createElement(
+	    _SvgIcon2.default,
+	    props,
+	    _react2.default.createElement('path', { d: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 12 7.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5zm0-5.5c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z' })
+	  );
+	};
+	AvAlbum = (0, _pure2.default)(AvAlbum);
+	AvAlbum.displayName = 'AvAlbum';
+	AvAlbum.muiName = 'SvgIcon';
+	
+	exports.default = AvAlbum;
+
+/***/ },
+/* 633 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
 	var _isomorphicFetch = __webpack_require__(261);
 	
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
@@ -66647,7 +66681,7 @@
 	exports.logout = logout;
 
 /***/ },
-/* 633 */
+/* 634 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -66730,7 +66764,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(CreateUser);
 
 /***/ },
-/* 634 */
+/* 635 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -66830,7 +66864,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(Search);
 
 /***/ },
-/* 635 */
+/* 636 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -66848,7 +66882,7 @@
 	
 	var _reactRedux = __webpack_require__(172);
 	
-	var _reactLoader = __webpack_require__(636);
+	var _reactLoader = __webpack_require__(637);
 	
 	var _reactLoader2 = _interopRequireDefault(_reactLoader);
 	
@@ -66957,13 +66991,13 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(Vinyl);
 
 /***/ },
-/* 636 */
+/* 637 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root, factory) {
 	
 	  if (true) {
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(1), __webpack_require__(34), __webpack_require__(637)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(1), __webpack_require__(34), __webpack_require__(638)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	  } else if (typeof module === 'object' && typeof module.exports === 'object') {
 	    module.exports = factory(require('react'), require('react-dom'), require('spin.js'));
 	  } else {
@@ -67084,7 +67118,7 @@
 
 
 /***/ },
-/* 637 */
+/* 638 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -67467,7 +67501,7 @@
 
 
 /***/ },
-/* 638 */
+/* 639 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -67576,7 +67610,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(Music);
 
 /***/ },
-/* 639 */
+/* 640 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -67594,7 +67628,7 @@
 	
 	var _reactRedux = __webpack_require__(172);
 	
-	var _reactLoader = __webpack_require__(636);
+	var _reactLoader = __webpack_require__(637);
 	
 	var _reactLoader2 = _interopRequireDefault(_reactLoader);
 	
@@ -67604,7 +67638,7 @@
 	
 	var _materialUi = __webpack_require__(273);
 	
-	var _reactTapEventPlugin = __webpack_require__(640);
+	var _reactTapEventPlugin = __webpack_require__(641);
 	
 	var _reactTapEventPlugin2 = _interopRequireDefault(_reactTapEventPlugin);
 	
@@ -67729,11 +67763,11 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(Tour);
 
 /***/ },
-/* 640 */
+/* 641 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(641);
-	var defaultClickRejectionStrategy = __webpack_require__(642);
+	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(642);
+	var defaultClickRejectionStrategy = __webpack_require__(643);
 	
 	var alreadyInjected = false;
 	
@@ -67755,14 +67789,14 @@
 	  alreadyInjected = true;
 	
 	  __webpack_require__(43).injection.injectEventPluginsByName({
-	    'TapEventPlugin':       __webpack_require__(643)(shouldRejectClick)
+	    'TapEventPlugin':       __webpack_require__(644)(shouldRejectClick)
 	  });
 	};
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 641 */
+/* 642 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -67817,7 +67851,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 642 */
+/* 643 */
 /***/ function(module, exports) {
 
 	module.exports = function(lastTouchEvent, clickTimestamp) {
@@ -67828,7 +67862,7 @@
 
 
 /***/ },
-/* 643 */
+/* 644 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -67856,10 +67890,10 @@
 	var EventPluginUtils = __webpack_require__(45);
 	var EventPropagators = __webpack_require__(42);
 	var SyntheticUIEvent = __webpack_require__(76);
-	var TouchEventUtils = __webpack_require__(644);
+	var TouchEventUtils = __webpack_require__(645);
 	var ViewportMetrics = __webpack_require__(77);
 	
-	var keyOf = __webpack_require__(645);
+	var keyOf = __webpack_require__(646);
 	var topLevelTypes = EventConstants.topLevelTypes;
 	
 	var isStartish = EventPluginUtils.isStartish;
@@ -68004,7 +68038,7 @@
 
 
 /***/ },
-/* 644 */
+/* 645 */
 /***/ function(module, exports) {
 
 	/**
@@ -68052,7 +68086,7 @@
 
 
 /***/ },
-/* 645 */
+/* 646 */
 /***/ function(module, exports) {
 
 	/**
@@ -68092,7 +68126,7 @@
 	module.exports = keyOf;
 
 /***/ },
-/* 646 */
+/* 647 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68110,7 +68144,7 @@
 	
 	var _reactRedux = __webpack_require__(172);
 	
-	var _signIn = __webpack_require__(632);
+	var _signIn = __webpack_require__(633);
 	
 	var _signIn2 = _interopRequireDefault(_signIn);
 	
@@ -68174,7 +68208,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(SignIn);
 
 /***/ },
-/* 647 */
+/* 648 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68269,7 +68303,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(Related);
 
 /***/ },
-/* 648 */
+/* 649 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68291,7 +68325,7 @@
 	
 	var action1 = _interopRequireWildcard(_saved);
 	
-	var _delete = __webpack_require__(649);
+	var _delete = __webpack_require__(650);
 	
 	var action2 = _interopRequireWildcard(_delete);
 	
@@ -68393,7 +68427,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(SavedVinyl);
 
 /***/ },
-/* 649 */
+/* 650 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68462,7 +68496,7 @@
 	exports.deleteTour = deleteTour;
 
 /***/ },
-/* 650 */
+/* 651 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68486,7 +68520,7 @@
 	
 	var action1 = _interopRequireWildcard(_saved);
 	
-	var _delete = __webpack_require__(649);
+	var _delete = __webpack_require__(650);
 	
 	var action2 = _interopRequireWildcard(_delete);
 	
@@ -68612,7 +68646,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(SavedTours);
 
 /***/ },
-/* 651 */
+/* 652 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68634,23 +68668,23 @@
 	
 	var _materialUi = __webpack_require__(273);
 	
-	var _signIn = __webpack_require__(632);
+	var _signIn = __webpack_require__(633);
 	
 	var _signIn2 = _interopRequireDefault(_signIn);
 	
-	var _home = __webpack_require__(652);
+	var _home = __webpack_require__(653);
 	
 	var _home2 = _interopRequireDefault(_home);
 	
-	var _exitToApp = __webpack_require__(653);
+	var _exitToApp = __webpack_require__(654);
 	
 	var _exitToApp2 = _interopRequireDefault(_exitToApp);
 	
-	var _search = __webpack_require__(654);
+	var _search = __webpack_require__(655);
 	
 	var _search2 = _interopRequireDefault(_search);
 	
-	var _person = __webpack_require__(655);
+	var _person = __webpack_require__(656);
 	
 	var _person2 = _interopRequireDefault(_person);
 	
@@ -68735,7 +68769,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(NavBar);
 
 /***/ },
-/* 652 */
+/* 653 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68772,7 +68806,7 @@
 	exports.default = ActionHome;
 
 /***/ },
-/* 653 */
+/* 654 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68809,7 +68843,7 @@
 	exports.default = ActionExitToApp;
 
 /***/ },
-/* 654 */
+/* 655 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68846,7 +68880,7 @@
 	exports.default = ActionSearch;
 
 /***/ },
-/* 655 */
+/* 656 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68881,43 +68915,6 @@
 	SocialPerson.muiName = 'SvgIcon';
 	
 	exports.default = SocialPerson;
-
-/***/ },
-/* 656 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _pure = __webpack_require__(303);
-	
-	var _pure2 = _interopRequireDefault(_pure);
-	
-	var _SvgIcon = __webpack_require__(312);
-	
-	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var AvAlbum = function AvAlbum(props) {
-	  return _react2.default.createElement(
-	    _SvgIcon2.default,
-	    props,
-	    _react2.default.createElement('path', { d: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 12 7.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5zm0-5.5c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z' })
-	  );
-	};
-	AvAlbum = (0, _pure2.default)(AvAlbum);
-	AvAlbum.displayName = 'AvAlbum';
-	AvAlbum.muiName = 'SvgIcon';
-	
-	exports.default = AvAlbum;
 
 /***/ }
 /******/ ]);
