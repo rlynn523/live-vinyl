@@ -5,6 +5,7 @@ html {
 *, *:before, *:after {
  	box-sizing: inherit;
 }
+
 @white: #FFFFFF;
 @dark-green: #388E3C;
 @green: #4CAF50;
@@ -17,11 +18,19 @@ html {
     font-size: 2em;
     text-align: center
 }
+.landingMain {
+    text-align: center;
+}
 .landingButtons {
     text-align: center;
 }
+.landingAbout {
+    margin: 3em 0;
+    text-align: center;
+}
 .signUpButton, .signInButton, .searchButtonLanding {
-    margin: 2.5em;
+    margin: 2em;
+    display: block
 }
 .searchTitle,.titleSignIn, .titleCreateUser {
     text-align: center;
@@ -29,12 +38,13 @@ html {
     padding: 1em 0;
 }
 .createUser, .signIn {
-    text-align: center
+    text-align: center;
 }
 input {
     height: 2.25em;
-    width: 25%;
-    margin-right: 5em;
+    width: 33%;
+    margin: 2em auto;
+    display: block;
 }
 .bandSearch {
     text-align: center;
@@ -60,6 +70,11 @@ ul {
     color: @white;
     margin: 0
 }
+.noSavedData {
+    text-align: center;
+    font-size: 2.5em;
+    padding: 1em 0;
+}
 .savedToursList, .savedVinylList, .tourList, .albumList, .vinylList, .relatedList {
     overflow-y: scroll;
     text-align: center;
@@ -81,7 +96,6 @@ ul {
     font-size: 2em;
     padding: 1em 0;
 }
-
 .albumChip:hover {
     cursor: pointer;
 }
@@ -91,4 +105,44 @@ a:link {
 }
 a:hover {
     color: @white;
+}
+
+// =====================================
+// Media Queries =======================
+// =====================================
+
+@media only screen and (max-width: 750px) {
+    .paperSaved, .paper {
+        display: block;
+        width: 75%;
+        margin: 2em auto;
+    }
+}
+@media only screen and (max-width: 750px) {
+    input::-webkit-input-placeholder {
+        font-size: .75em
+    }
+}
+@media only screen and (max-width: 550px) {
+    .landingAbout {
+        font-size: 0.875em
+    }
+}
+
+@media only screen and (max-width: 450px) {
+    img {
+        width: 80%
+    }
+    .signInButton, .signUpButton, .searchButtonLanding {
+        width: 65%;
+        margin: 1.5em;
+    }
+    .landingAbout {
+        font-size: 0.8em
+    }
+}
+@media only screen and (max-width: 400px) {
+    .landingAbout {
+        font-size: .75em
+    }
 }
