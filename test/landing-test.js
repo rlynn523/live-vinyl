@@ -17,23 +17,20 @@ describe('Landing component', function() {
         landing.children[0].props.className.should.equal('titleMain');
         landing.children[0].props.children.should.equal('Welcome To Live Vinyl');
 
-        landing.children[1].type.should.equal('p');
-        landing.children[1].props.className.should.equal('titleSecond');
-        landing.children[1].props.children.should.equal('Search An Artist You Love');
+        landing.children[1].props.className.should.equal('vinylIcon');
 
-        landing.children[2].type.should.equal('div');
-        landing.children[2].props.className.should.equal('landingChips');
-
-        let chips = landing.children[2].props;
-        chips.children[0].props.children.should.equal('Get Current Tour Dates & Save Tour Dates To Your Profile');
-        chips.children[1].props.children.should.equal('Get Available Albums On Spotify');
-        chips.children[2].props.children.should.equal('Get Vinyl Releases From Artist & Add Them To Your Collection');
-        chips.children[3].props.children.should.equal('Get Related Artists');
-
-        let buttons = landing.children[3].props;
+        let buttons = landing.children[2].props;
         buttons.className.should.equal('landingButtons');
         buttons.children[0].props.to.should.equal('/sign-in');
         buttons.children[1].props.to.should.equal('/create-user');
         buttons.children[2].props.to.should.equal('/search');
+        landing.children[2].type.should.equal('div');
+        landing.children[2].props.className.should.equal('landingButtons');
+
+        let chips = landing.children[3].props;
+        chips.children[0].props.children.should.equal('Get Related Artists || Get Current Tour Dates');
+        chips.children[1].props.children.should.equal('Get Vinyl Releases From Artist || Get Available Albums On Spotify');
+        chips.children[2].props.children.should.equal('Save Tours & Vinyl To Your Profile');
+
     });
 });
