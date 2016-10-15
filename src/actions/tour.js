@@ -9,6 +9,7 @@ let fetchTourDates = function(tour) {
 }
 let fetchTour = function(userSearch, tour) {
     return function(dispatch) {
+        let url = 'https://api.bandsintown.com/artists/'+userSearch+'/events.json?api_version=2.0&app_id=VINYL_COLLECTION';
         $.ajax({
                url: url,
                type: 'GET',
