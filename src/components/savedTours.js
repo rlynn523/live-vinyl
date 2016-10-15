@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import * as action1 from '../actions/saved';
 import * as action2 from '../actions/delete';
 import { MuiThemeProvider, RaisedButton, Paper, Chip } from 'material-ui';
@@ -44,7 +45,15 @@ export class SavedTours extends Component {
             );
         } else {
             return (
-                <p></p>
+                <MuiThemeProvider>
+                    <div>
+                        <p className='noSavedData' style={{fontWeight: 'lighter'}}>Please Sign Up or Sign In To Save Tours & Vinyl.</p>
+                        <div className='landingButtons'>
+                            <Link to={'/sign-in'}><RaisedButton className='signInButton' backgroundColor='#FF9800' labelColor='#FFFFFF' label='Sign In' /></Link>
+                            <Link to={'/create-user'}><RaisedButton className='signUpButton' backgroundColor='#FF9800' labelColor='#FFFFFF' label='Create User' /></Link>
+                        </div>
+                    </div>
+                </MuiThemeProvider>
             );
         }
     }
