@@ -147,9 +147,14 @@ a:hover {
   }
   .signInButton,
   .signUpButton,
-  .searchButtonLanding {
+  .searchButtonLanding,
+  .searchButton {
     width: 65%;
     margin: 1.5em;
+  }
+  input {
+    width: 65%;
+    margin: 1.5em auto;
   }
   .landingAbout {
     font-size: 0.8em;

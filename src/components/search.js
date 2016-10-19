@@ -32,7 +32,7 @@ export class Search extends Component {
                 <div className='bandSearch'>
                     <p className='searchTitle' style={{fontWeight: 'lighter'}}>Search An Artist</p>
                     <input type='text' ref='userSearch' placeholder=' ex: Radiohead' />
-                    <RaisedButton backgroundColor='#FF9800' onClick={this.onClick} label='Search Artist' labelColor='#FFFFFF'/>
+                    <RaisedButton className='searchButton' backgroundColor='#FF9800' onClick={this.onClick} label='Search Artist' labelColor='#FFFFFF'/>
                 </div>
             </MuiThemeProvider>
         );
