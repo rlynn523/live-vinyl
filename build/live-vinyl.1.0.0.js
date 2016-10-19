@@ -66846,7 +66846,7 @@
 	                        'Search An Artist'
 	                    ),
 	                    _react2.default.createElement('input', { type: 'text', ref: 'userSearch', placeholder: ' ex: Radiohead' }),
-	                    _react2.default.createElement(_materialUi.RaisedButton, { backgroundColor: '#FF9800', onClick: this.onClick, label: 'Search Artist', labelColor: '#FFFFFF' })
+	                    _react2.default.createElement(_materialUi.RaisedButton, { className: 'searchButton', backgroundColor: '#FF9800', onClick: this.onClick, label: 'Search Artist', labelColor: '#FFFFFF' })
 	                )
 	            );
 	        }
