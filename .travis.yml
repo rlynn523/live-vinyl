@@ -1,7 +1,7 @@
 language: node_js
 node_js: node
 env:
-  - CXX=g++-4.8
+- CXX=g++-4.8
 addons:
   apt:
     sources:
@@ -10,3 +10,10 @@ addons:
     packages:
     - g++-4.8
     - mongodb-org-server
+deploy:
+  provider: heroku
+  api_key:
+    secure: wdJ1Bq1nvDp3RaCmY0Bt+vfVPiXjCGGnuiEf0psAvqg+z6ri69Hol2h4Y1i2/A1kVMW7dz0tklWJHLFbcKPuwtffb53zyBu9nyyqKxLhqleMq7zZ9eGq2s+O/mXp2xLtmfWPp4Q4yogJ+vb9tfCsJt7QOwFQoeIE+OvmKLxp2V3HSBXHHy26o+ZlPJgA1hwQ75kdLLKiUvk5OMVZP//wh5ZtT73HRKPdlz5psMsAStZ7P2Bmxg903zruJ5uQRqSvF1onx4C52hBkt6jCnz3aqlKUd4EKQF7MzPnS0umCo08jZxkINmI9/1GLSNEa58hdRRvuaAcgt5cYJLM2Ze38TtDIqw+hAdiGVtE7QSR5rDf6/gPz7ijuxct7MFI+K5wiWf1x2v6N9eEJ8PvjhbD2tB3NmSS/pabuoTWpuLEBZ1+Rt1K0itbMNSbvJAXdOpdy742EgHdjdfrcSMsPaR3ZPKlijjcZY/VUTK7wnTZs2gCgsM58gGaibFpdVHICgGAw7MBOy14/pY2cEvprS1CWfTnt8rUxyR3WUz36xco1G0Z3zn+iJKMd5uA9NQHTxB0xKx1IGB9FR6JYc/v/AyDp5QAiqi43xExbT/MeiVdUIsxKj6wt7jeHrSIviSVYn/kZM2LsoogOUPzAfYw/rakO1tLgHjTXmWa82ej+/WLYfA8=
+  app: murmuring-scrubland-56766
+  on:
+    repo: rlynn523/live-vinyl
