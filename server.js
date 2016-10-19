@@ -261,5 +261,4 @@ app.delete('/vinyl/:id', isLoggedIn, function(req, res) {
 });
 
 app.listen(process.env.PORT || 8080);
-
 module.exports.app = app;
