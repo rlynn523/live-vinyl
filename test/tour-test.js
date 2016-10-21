@@ -59,7 +59,7 @@ describe('Tour component', function() {
         listItem.children[1].props.children[6].props.children[2].props.href.should.equal('www.tickets.com');
         listItem.children[1].props.children[6].props.children[2].props.children.should.equal('available');
 
-        let saveTourButton = listItem.children[0].props.children[7];
+        let saveTourButton = listItem.children[0].props.children[8];
         saveTourButton.props.className.should.equal('tourButton');
         saveTourButton.props.label.should.equal('Save Tour Date');
     });
