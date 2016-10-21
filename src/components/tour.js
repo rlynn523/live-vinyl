@@ -34,6 +34,7 @@ export class Tour extends Component {
                 return <li key={artistTourDate.id}>
                     {artistTourDate.title} <br></br> {artistTourDate.formatted_datetime}<br></br>
                 <Chip style={{margin: '5px auto'}} backgroundColor={'#C8E6C9'}>{artistTourDate.ticket_type}: <a href={artistTourDate.ticket_url} target='_blank'>{artistTourDate.ticket_status}</a></Chip>
+                <Chip style={{margin: '5px auto'}} backgroundColor={'#C8E6C9'}><a href={artistTourDate.facebook_rsvp_url} target='_blank'>RSVP</a></Chip>
                 <RaisedButton className='tourButton' backgroundColor='#FF9800' labelColor='#FFFFFF' label='Save Tour Date' onClick={() => this.onClick({artistTourDate})} />
                 </li>
             }, this);
