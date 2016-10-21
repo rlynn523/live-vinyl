@@ -9,7 +9,7 @@ let fetchTourDates = function(tour) {
 }
 let fetchTour = function(userSearch, tour) {
     return function(dispatch) {
-        let url = 'https://api.bandsintown.com/artists/'+userSearch+'/events.json?api_version=2.0&app_id=VINYL_COLLECTION';
+        let url = 'https://api.bandsintown.com/artists/'+userSearch+'/events.json?api_version=2.0&app_id=LIVE_VINYL';
         $.ajax({
                url: url,
                type: 'GET',
@@ -48,7 +48,7 @@ let saveTour = function(tour) {
             data: JSON.stringify({
                 title: tour.title,
                 date: tour.formatted_datetime,
-                tickets: tour.ticket_url
+                rsvp: tour.facebook_rsvp_url
             }),
             contentType: 'application/json',
         }).done(function(data) {
