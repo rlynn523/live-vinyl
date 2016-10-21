@@ -10,6 +10,7 @@ export class Music extends Component {
                 return <li key={artistAlbum.id}><a href={artistAlbum.external_urls.spotify} target='_blank'><img src={artistAlbum.images[1].url} /></a>
                     <br></br>
                     <Chip className='albumChip' backgroundColor={'#C8E6C9'} style={{margin: '8px auto'}}><a href={artistAlbum.external_urls.spotify} target='_blank'>{artistAlbum.name}</a></Chip>
+                    <a href={artistAlbum.external_urls.spotify} target='_blank'><img className='icon' src='Spotify_Logo_RGB_Green.png'></img></a>
                 </li>
             });
             return(
@@ -17,8 +18,8 @@ export class Music extends Component {
                     <Paper className='paper'>
                         <div>
                             <Paper>
-                                <p className='musicTitle' style={{fontWeight: 'lighter'}}>Artist Albums</p>
-                            </Paper>
+                                   <p className='musicTitle' style={{fontWeight: 'lighter'}}>Artist Albums</p>
+                               </Paper>
                             <ul className='albumList'>
                                 {artistAlbums}
                             </ul>

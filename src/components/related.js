@@ -15,6 +15,7 @@ export class Related extends Component {
                         <div>
                             <p className='relatedTitle' style={{fontWeight: 'lighter'}}>Related Artists</p>
                             <ul className='relatedList'>
+                                <img className='icon' src='Spotify_Logo_RGB_Green.png'></img>
                                 {relatedArtists}
                             </ul>
                         </div>

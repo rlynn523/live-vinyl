@@ -74,9 +74,9 @@ passport.deserializeUser(function(id, done) {
     });
 });
 
-// // =====================================
-// // Creating New Users ==================
-// // =====================================
+// =====================================
+// Creating New Users ==================
+// =====================================
 
 app.post('/users', jsonParser, function(req, res) {
     if (!req.body) {
@@ -179,7 +179,7 @@ app.post('/tours', isLoggedIn, function(req, res) {
         Tour.create({
                 title: req.body.title,
                 date: req.body.date,
-                tickets: req.body.tickets,
+                rsvp: req.body.rsvp,
                 userId: req.user._id
         }, function(err, tour) {
                 if (err) {

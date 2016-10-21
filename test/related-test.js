@@ -34,11 +34,12 @@ describe('Related component', function() {
         relatedList.props.className.should.equal('relatedList');
 
         let listItem = relatedList.props;
-        listItem.children[0].type.should.equal('li');
-        listItem.children[0].key.should.equal('123134');
-        listItem.children[0].props.children.props.children.should.equal('radiohead');
-        listItem.children[1].type.should.equal('li');
-        listItem.children[1].key.should.equal('123');
-        listItem.children[1].props.children.props.children.should.equal('red fang');
+        listItem.children[0].type.should.equal('img');
+        listItem.children[1][0].type.should.equal('li');
+        listItem.children[1][0].key.should.equal('123134');
+        listItem.children[1][0].props.children.props.children.should.equal('radiohead');
+        listItem.children[1][1].type.should.equal('li');
+        listItem.children[1][1].key.should.equal('123');
+        listItem.children[1][1].props.children.props.children.should.equal('red fang');
     });
 });

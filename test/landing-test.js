@@ -29,7 +29,7 @@ describe('Landing component', function() {
 
         let chips = landing.children[3].props;
         chips.children[0].props.children.should.equal('Get Related Artists || Get Current Tour Dates');
-        chips.children[1].props.children.should.equal('Get Vinyl Releases From Artist || Get Available Albums On Spotify');
+        chips.children[1].props.children.should.equal('Get Vinyl Releases From Artist || Get Available Albums');
         chips.children[2].props.children.should.equal('Save Tours & Vinyl To Your Profile');
 
     });

@@ -18,7 +18,7 @@ export default class Landing extends Component {
                     </div>
                     <div className='landingAbout'>
                         <p style={{fontWeight: 'lighter'}}>Get Related Artists || Get Current Tour Dates</p>
-                        <p style={{fontWeight: 'lighter'}}>Get Vinyl Releases From Artist || Get Available Albums On Spotify</p>
+                        <p style={{fontWeight: 'lighter'}}>Get Vinyl Releases From Artist || Get Available Albums</p>
                         <p style={{fontWeight: 'lighter'}}>Save Tours & Vinyl To Your Profile</p>
                     </div>
                 </div>
