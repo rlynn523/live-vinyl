@@ -7,7 +7,7 @@ var TourSchema = new Schema ({
         type: String,
         unique: true
     },
-    tickets: {
+    rsvp: {
         type: String,
         unique: true
     },
