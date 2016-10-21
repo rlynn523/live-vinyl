@@ -29308,11 +29308,14 @@
 	    };
 	};
 	var fetchVinyl = function fetchVinyl(userSearch, vinyl) {
+	    var headers = {
+	        'User-Agent': 'My User Agent 1.0'
+	    };
 	    return function (dispatch) {
 	        // var headers = new Headers();
 	        // headers.append('User-Agent', 'VinylCollection/2.0');
 	        var url = 'https://api.discogs.com/database/search?q=' + userSearch + '&format=Vinyl,album,LP&key=yWkjlILruJQTksamjYun&secret=THKNSeHdZeMCnPmMLkFfEdHJUTGDenPH';
-	        return (0, _isomorphicFetch2.default)(url).then(function (response) {
+	        return (0, _isomorphicFetch2.default)(url, headers = headers).then(function (response) {
 	            if (response.status < 200 || response.status >= 300) {
 	                var error = new Error(response.statusText);
 	                error.response = response;
@@ -29424,7 +29427,7 @@
 	};
 	var fetchTour = function fetchTour(userSearch, tour) {
 	    return function (dispatch) {
-	        var url = 'https://api.bandsintown.com/artists/' + userSearch + '/events.json?api_version=2.0&app_id=VINYL_COLLECTION';
+	        var url = 'https://api.bandsintown.com/artists/' + userSearch + '/events.json?api_version=2.0&app_id=LIVE_VINYL';
 	        $.ajax({
 	            url: url,
 	            type: 'GET',
@@ -29459,7 +29462,7 @@
 	            data: JSON.stringify({
 	                title: tour.title,
 	                date: tour.formatted_datetime,
-	                tickets: tour.ticket_url
+	                rsvp: tour.facebook_rsvp_url
 	            }),
 	            contentType: 'application/json'
 	        }).done(function (data) {
@@ -66558,7 +66561,7 @@
 	                        _react2.default.createElement(
 	                            'p',
 	                            { style: { fontWeight: 'lighter' } },
-	                            'Get Vinyl Releases From Artist || Get Available Albums On Spotify'
+	                            'Get Vinyl Releases From Artist || Get Available Albums'
 	                        ),
 	                        _react2.default.createElement(
 	                            'p',
@@ -67565,6 +67568,11 @@
 	                                { href: artistAlbum.external_urls.spotify, target: '_blank' },
 	                                artistAlbum.name
 	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            'a',
+	                            { href: artistAlbum.external_urls.spotify, target: '_blank' },
+	                            _react2.default.createElement('img', { className: 'icon', src: 'Spotify_Logo_RGB_Green.png' })
 	                        )
 	                    );
 	                });
@@ -67718,6 +67726,15 @@
 	                                'a',
 	                                { href: artistTourDate.ticket_url, target: '_blank' },
 	                                artistTourDate.ticket_status
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            _materialUi.Chip,
+	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
+	                            _react2.default.createElement(
+	                                'a',
+	                                { href: artistTourDate.facebook_rsvp_url, target: '_blank' },
+	                                'RSVP'
 	                            )
 	                        ),
 	                        _react2.default.createElement(_materialUi.RaisedButton, { className: 'tourButton', backgroundColor: '#FF9800', labelColor: '#FFFFFF', label: 'Save Tour Date', onClick: function onClick() {
@@ -68282,6 +68299,7 @@
 	                            _react2.default.createElement(
 	                                'ul',
 	                                { className: 'relatedList' },
+	                                _react2.default.createElement('img', { className: 'icon', src: 'Spotify_Logo_RGB_Green.png' }),
 	                                relatedArtists
 	                            )
 	                        )
@@ -68575,7 +68593,13 @@
 	                            { style: { margin: '5px auto' }, backgroundColor: '#C8E6C9' },
 	                            savedTour.title,
 	                            _react2.default.createElement('br', null),
-	                            savedTour.date
+	                            savedTour.date,
+	                            _react2.default.createElement('br', null),
+	                            _react2.default.createElement(
+	                                'a',
+	                                { href: savedTour.rsvp, target: '_blank' },
+	                                'RSVP'
+	                            )
 	                        ),
 	                        _react2.default.createElement(_materialUi.RaisedButton, { className: 'deleteButton', label: 'Delete Tour Date', backgroundColor: '#FF9800', labelColor: '#FFFFFF', onClick: function onClick() {
 	                                return _this2.onClick({ savedTour: savedTour });
