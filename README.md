@@ -12,6 +12,8 @@ https://murmuring-scrubland-56766.herokuapp.com/#/?_k=zog66j
 <li><a href='#sign-up'>Sign Up</a></li>
 <li><a href='#artist-search'>Artist Search</a></li>
 <li><a href='#saved-user-data'>Saved User Data</a></li>
+<li><a href='#tech-used'>Tech Used</a></li>
+<li><a href='#what-does-the-future-hold'>What Does The Future Hold?</a></li>
 
 ##Purpose
 The purpose of this app is to allow a user to search any artist that they love, and then show all the current tour dates, albums on spotify, vinyl releases, and related artists. Users can create a log in and save vinyl and tour dates to their profile
